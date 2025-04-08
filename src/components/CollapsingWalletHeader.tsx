@@ -53,9 +53,6 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
         <div className="text-5xl font-bold text-[rgb(var(--text-white))]">
           {balanceSat.toLocaleString()} sats
         </div>
-        <div className="text-xl text-[rgb(var(--text-white))]">
-          ${formatBtc(balanceSat * 0.00000001 * 30000)}
-        </div>
       </div>
 
       {/* Pending Amounts - fade out and collapse */}
