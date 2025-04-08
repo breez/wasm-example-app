@@ -1,0 +1,131 @@
+import React, { useState } from 'react';
+import { Payment } from '../../pkg/breez_sdk_liquid_wasm';
+import PaymentDetailsDialog from './PaymentDetailsDialog';
+
+interface TransactionListProps {
+  transactions: Payment[];
+}
+
+const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+
+  if (!transactions.length) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6">
+        {/* <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Transaction History</h2>
+        <p className="text-gray-600 dark:text-gray-400 text-center py-4">No transactions found</p> */}
+      </div>
+    );
+  }
+
+  // Format relative time (time ago)
+  const formatTimeAgo = (timestamp: number): string => {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    const diffSeconds = now - timestamp;
+
+    // Convert to appropriate time unit
+    if (diffSeconds < 60) {
+      return `${diffSeconds} seconds ago`;
+    } else if (diffSeconds < 3600) {
+      const minutes = Math.floor(diffSeconds / 60);
+      return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+    } else if (diffSeconds < 86400) {
+      const hours = Math.floor(diffSeconds / 3600);
+      return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diffSeconds < 2592000) { // 30 days
+      const days = Math.floor(diffSeconds / 86400);
+      return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+    } else if (diffSeconds < 31536000) { // 365 days
+      const months = Math.floor(diffSeconds / 2592000);
+      return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+    } else {
+      const years = Math.floor(diffSeconds / 31536000);
+      return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+    }
+  };
+
+  // Get transaction icon based on type (now using plus/minus icons)
+  const getTransactionIcon = (payment: Payment): string => {
+    if (payment.paymentType === 'receive') {
+      return '+';
+    } else if (payment.paymentType === 'send') {
+      return '−'; // Using minus sign (not hyphen) for better visual
+    }
+    return '•';
+  };
+
+  // Get transaction color based on type and status
+  const getTransactionColor = (payment: Payment): string => {
+    if (payment.status === 'failed' || payment.status === 'timedOut') {
+      return 'text-[rgb(var(--accent-red))]';
+    } else if (payment.status === 'pending' || payment.status === 'created') {
+      return 'text-yellow-400';
+    } else if (payment.paymentType === 'receive') {
+      return 'text-[rgb(var(--accent-green))]';
+    } else {
+      return 'text-[rgb(var(--accent-red))]';
+    }
+  };
+
+  // Get short description from payment details
+  const getDescription = (payment: Payment): string => {
+    let description = '';
+
+    if (payment.details.type == 'lightning') {
+      const details = payment.details;
+      description = details.description || 'Lightning Payment';
+    } else if (payment.details.hasOwnProperty('liquid')) {
+      const details = payment.details['liquid' as keyof typeof payment.details] as any;
+      description = details.description || 'Liquid Payment';
+    } else if (payment.details.hasOwnProperty('bitcoin')) {
+      const details = payment.details['bitcoin' as keyof typeof payment.details] as any;
+      description = details.description || 'Bitcoin Payment';
+    }
+
+    return description || 'Unknown Payment';
+  };
+
+  return (
+    <div className="card">
+      <ul className="space-y-2"> {/* Reduced space between items */}
+        {transactions.map((tx) => (
+          <li
+            key={tx.txId || `${tx.timestamp}-${tx.amountSat}`}
+            className="list-item flex justify-between items-center py-2 px-3 hover:bg-[rgb(var(--card-border))] cursor-pointer transition-colors"
+            onClick={() => setSelectedPayment(tx)}
+          >
+            <div className="flex flex-none items-center space-x-3"> {/* Reduced horizontal spacing */}
+              <div className={`w-8 h-8 rounded-full bg-[rgb(var(--card-border))] flex items-center justify-center ${getTransactionColor(tx)}`}>
+                <span className="text-lg font-bold">{getTransactionIcon(tx)}</span>
+              </div>
+              <div className="flex flex-none flex-col"> {/* Removed vertical spacing */}
+                <p className="text-sm text-[rgb(var(--text-white))]">{getDescription(tx)}</p>
+                <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">{formatTimeAgo(tx.timestamp)}</p>
+              </div>
+
+              <div className="ml-auto pl-3 flex-1"> {/* Added ml-auto to push to right and pl-3 for spacing */}
+                <div className="flex flex-col items-end justify-center">
+                  <p className={`font-medium text-sm ${tx.paymentType === 'receive' ? 'text-[rgb(var(--accent-green))]' : 'text-[rgb(var(--accent-red))]'}`}>
+                    {tx.paymentType === 'receive' ? '+' : '-'} {tx.amountSat.toLocaleString()} sats
+                  </p>
+                  <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">Fee {tx.feesSat} sats</p>
+                </div>
+              </div>
+            </div>
+
+          </li>
+        ))}
+      </ul>
+
+      {/* Show payment details dialog when a payment is selected */}
+      {selectedPayment && (
+        <PaymentDetailsDialog
+          payment={selectedPayment}
+          onClose={() => setSelectedPayment(null)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default TransactionList;
