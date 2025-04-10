@@ -100,10 +100,14 @@ main {
 /* Add card styles */
 .card {
   background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
+  border: none;
   border-radius: 8px;
-  padding: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.bottom-bar {
+  border-radius: 0px 0px 20px 20px;
+  padding: 20px 0px;
 }
 
 /* List item styles */
@@ -150,8 +154,7 @@ select:focus {
 
 /* Footer adjustments */
 footer {
-  background-color: var(--card-bg);
-  color: var(--text-white);
+  display: none;
 }
 
 /* Add smooth scrolling for the transaction list */
@@ -217,4 +220,17 @@ footer {
 .toast-notification {
   max-width: 100%;
   overflow: hidden;
+}
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+  background-color: var(--primary-blue);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  padding-bottom: env(safe-area-inset-bottom);
+  /* For iOS devices with home indicator */
+}
+
+/* Ensure bottom padding on main content to make room for the nav bar */
+.pb-nav {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
 }

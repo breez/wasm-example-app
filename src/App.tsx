@@ -242,7 +242,7 @@ const AppContent: React.FC = () => {
         {/* Header content */}
       </header>
 
-      <main className="container mx-auto p-4 max-w-4xl flex-grow overflow-hidden">
+      <main className="container mx-auto p-4 pb-24 max-w-4xl flex-grow overflow-hidden">
         {error && (
           <div className="bg-red-500 text-white px-4 py-3 rounded mb-4">
             {error}
@@ -261,7 +261,7 @@ const AppContent: React.FC = () => {
                 <MnemonicInput onConnect={(m) => connectWallet(m, true)} />
               </div>
             ) : (
-              <div className="flex flex-col h-[calc(100vh-120px)] relative">
+              <div className="flex flex-col h-[calc(100vh-170px)] relative">
                 {/* Show restoration overlay if we're restoring */}
                 {isRestoring && (
                   <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
@@ -270,40 +270,38 @@ const AppContent: React.FC = () => {
                 )}
 
                 {/* Fixed position header that collapses on scroll */}
-                <div className="sticky top-0 z-10 pb-2 bg-[rgb(var(--background-rgb))]">
+                <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
                   <CollapsingWalletHeader
                     walletInfo={walletInfo}
                     onRefresh={() => refreshWalletData(true)}
                     scrollProgress={scrollProgress}
                   />
-
-                  {/* Floating Send/Receive buttons */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-6 flex space-x-4 z-20">
-                    <button
-                      className="action-button bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
-                      onClick={() => setIsSendDialogOpen(true)}
-                    >
-                      <span className="action-icon">↑</span>
-                      <span>Send</span>
-                    </button>
-                    <div className="w-12" />
-                    <button
-                      className="action-button bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
-                      onClick={() => setIsReceiveDialogOpen(true)}
-                    >
-                      <span className="action-icon">↓</span>
-                      <span>Receive</span>
-                    </button>
-                  </div>
                 </div>
 
                 {/* Scrollable transaction list */}
                 <div
                   ref={transactionsContainerRef}
-                  className="flex-grow overflow-y-auto mt-2"
+                  className="flex-grow overflow-y-auto"
                   onScroll={handleScroll}
                 >
                   <TransactionList transactions={transactions} />
+                </div>
+                <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-between px-6 z-30">
+                  <button
+                    onClick={() => setIsSendDialogOpen(true)}
+                    className="flex items-center text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+                  >
+                    <span className="text-xl mr-2">↑</span>
+                    <span className="font-medium">Send</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsReceiveDialogOpen(true)}
+                    className="flex items-center text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+                  >
+                    <span className="font-medium">Receive</span>
+                    <span className="text-xl ml-2">↓</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -329,9 +327,8 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      <footer className="p-4 text-center">
-        <p>Lightning Wallet - Powered by Breez SDK</p>
-      </footer>
+      {/* Bottom Navigation Bar - moved to a more appropriate position */}
+
     </div>
   );
 };

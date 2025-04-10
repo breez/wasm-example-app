@@ -16,13 +16,6 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
 
   const { walletInfo: wallet } = walletInfo;
   const balanceSat = wallet.balanceSat || 0;
-  const pendingSendSat = wallet.pendingSendSat || 0;
-  const pendingReceiveSat = wallet.pendingReceiveSat || 0;
-
-  // Format balance in BTC
-  const formatBtc = (satoshis: number) => {
-    return (satoshis / 100000000).toFixed(8);
-  };
 
   // Calculate opacity for pending amounts section (fade out first)
   const pendingOpacity = Math.max(0, 1 - scrollProgress * 2); // Fully transparent at 50% scroll
@@ -64,26 +57,6 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
           marginTop: pendingOpacity > 0 ? '1rem' : '0'
         }}
       >
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-2">
-            <span className="text-sm text-[rgb(var(--text-white))] opacity-70">Pending Send</span>
-            <p className="font-semibold text-yellow-500">
-              {formatBtc(pendingSendSat)} BTC
-            </p>
-            <span className="text-xs text-[rgb(var(--text-white))] opacity-70">
-              {pendingSendSat.toLocaleString()} sats
-            </span>
-          </div>
-          <div className="text-center p-2">
-            <span className="text-sm text-[rgb(var(--text-white))] opacity-70">Pending Receive</span>
-            <p className="font-semibold text-blue-400">
-              {formatBtc(pendingReceiveSat)} BTC
-            </p>
-            <span className="text-xs text-[rgb(var(--text-white))] opacity-70">
-              {pendingReceiveSat.toLocaleString()} sats
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Add extra padding at the bottom to accommodate the floating buttons */}
