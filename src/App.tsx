@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { GetInfoResponse, Payment, SdkEvent, Rate } from '../pkg/breez_sdk_liquid_wasm';
+import { GetInfoResponse, Payment, SdkEvent } from '../pkg/breez_sdk_liquid_wasm';
 import * as walletService from './services/walletService';
 import CollapsingWalletHeader from './components/CollapsingWalletHeader';
 import TransactionList from './components/TransactionList';
@@ -20,7 +20,6 @@ const AppContent: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
   const [isReceiveDialogOpen, setIsReceiveDialogOpen] = useState<boolean>(false);
-  const [fiatRates, setFiatRates] = useState<Rate[]>([]);
   const [usdRate, setUsdRate] = useState<number | null>(null);
 
   const { showToast } = useToast();
@@ -143,7 +142,6 @@ const AppContent: React.FC = () => {
   const fetchUsdRate = useCallback(async () => {
     try {
       const rates = await walletService.fetchFiatRates();
-      setFiatRates(rates);
 
       // Find USD rate
       const usdRate = rates.find(rate => rate.coin === 'USD');
