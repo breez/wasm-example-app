@@ -86,7 +86,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
   };
 
   return (
-    <div className="card">
+    <div className="card-no-border">
       <ul className="space-y-2"> {/* Reduced space between items */}
         {transactions.map((tx) => (
           <li
@@ -100,15 +100,15 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
               </div>
               <div className="flex flex-none flex-col"> {/* Removed vertical spacing */}
                 <p className="text-sm text-[rgb(var(--text-white))]">{getDescription(tx)}</p>
-                <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">{formatTimeAgo(tx.timestamp)}</p>
+                <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">{formatTimeAgo(tx.timestamp)} {tx.status === 'pending' && <span className='text-yellow-400'>(Pending)</span>}</p>
               </div>
 
               <div className="ml-auto pl-3 flex-1"> {/* Added ml-auto to push to right and pl-3 for spacing */}
                 <div className="flex flex-col items-end justify-center">
                   <p className={`font-medium text-sm ${tx.paymentType === 'receive' ? 'text-[rgb(var(--accent-green))]' : 'text-[rgb(var(--accent-red))]'}`}>
-                    {tx.paymentType === 'receive' ? '+' : '-'} {tx.amountSat.toLocaleString()} sats
+                    {tx.paymentType === 'receive' ? '+' : '-'} {tx.amountSat.toLocaleString()}
                   </p>
-                  <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">Fee {tx.feesSat} sats</p>
+                  <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">Fee {tx.feesSat}</p>
                 </div>
               </div>
             </div>

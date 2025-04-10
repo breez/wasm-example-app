@@ -75,6 +75,12 @@ export const receivePayment = async (
   return await sdk.receivePayment(params);
 };
 
+// Fiat rate operations
+export const fetchFiatRates = async (): Promise<breezSdk.Rate[]> => {
+  if (!sdk) throw new Error('SDK not initialized');
+  return await sdk.fetchFiatRates();
+};
+
 // Event handling
 export const addEventListener = async (
   callback: (event: breezSdk.SdkEvent) => void

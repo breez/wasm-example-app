@@ -1,16 +1,16 @@
 import React from 'react';
 import { GetInfoResponse } from '../../pkg/breez_sdk_liquid_wasm';
-import BreezLogo from './BreezLogo';
 
 interface CollapsingWalletHeaderProps {
   walletInfo: GetInfoResponse | null;
-  onRefresh: () => void;
   scrollProgress: number; // 0 to 1, where 0 is not scrolled and 1 is fully collapsed
+  usdRate: number | null;
 }
 
 const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
   walletInfo,
-  scrollProgress
+  scrollProgress,
+  usdRate
 }) => {
   if (!walletInfo) return null;
 
@@ -28,12 +28,11 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
   // Height of the pending section when fully visible
   const maxPendingHeight = '80px';
 
+  // Calculate USD value if rate is available
+  const usdValue = usdRate !== null ? ((balanceSat / 100000000) * usdRate).toFixed(2) : null;
+
   return (
-    <div className="card transition-all duration-200 overflow-hidden relative">
-      {/* Breez SDK Logo at the top left of the wallet card */}
-      <div className="absolute top-3 left-3 z-10">
-        <BreezLogo className="text-[rgb(var(--text-white))] scale-75 transform origin-top-left" />
-      </div>
+    <div className="card-no-border transition-all duration-200 overflow-hidden relative">
 
       {/* Main Balance - always visible but scales down */}
       <div
@@ -43,7 +42,7 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
           transformOrigin: 'center top'
         }}
       >
-        <div className="text-5xl font-bold text-[rgb(var(--text-white))]">
+        <div className="text-4xl font-bold text-[rgb(var(--text-white))]">
           {balanceSat.toLocaleString()} sats
         </div>
       </div>
@@ -57,6 +56,12 @@ const CollapsingWalletHeader: React.FC<CollapsingWalletHeaderProps> = ({
           marginTop: pendingOpacity > 0 ? '1rem' : '0'
         }}
       >
+        {/* USD Value - only show if we have a rate */}
+        {usdValue && (
+          <div className="text-center text-lg text-[rgb(var(--text-white))] opacity-75 mt-1">
+            ${usdValue}
+          </div>
+        )}
       </div>
 
       {/* Add extra padding at the bottom to accommodate the floating buttons */}

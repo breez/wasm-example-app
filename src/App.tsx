@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { GetInfoResponse, Payment, SdkEvent } from '../pkg/breez_sdk_liquid_wasm';
+import { GetInfoResponse, Payment, SdkEvent, Rate } from '../pkg/breez_sdk_liquid_wasm';
 import * as walletService from './services/walletService';
 import CollapsingWalletHeader from './components/CollapsingWalletHeader';
 import TransactionList from './components/TransactionList';
@@ -20,6 +20,8 @@ const AppContent: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
   const [isReceiveDialogOpen, setIsReceiveDialogOpen] = useState<boolean>(false);
+  const [fiatRates, setFiatRates] = useState<Rate[]>([]);
+  const [usdRate, setUsdRate] = useState<number | null>(null);
 
   const { showToast } = useToast();
   const transactionsContainerRef = useRef<HTMLDivElement>(null);
@@ -136,6 +138,36 @@ const AppContent: React.FC = () => {
       }
     }
   }, [refreshWalletData, showToast, isReceiveDialogOpen, isRestoring]);
+
+  // Function to fetch fiat rates (USD specifically)
+  const fetchUsdRate = useCallback(async () => {
+    try {
+      const rates = await walletService.fetchFiatRates();
+      setFiatRates(rates);
+
+      // Find USD rate
+      const usdRate = rates.find(rate => rate.coin === 'USD');
+      if (usdRate) {
+        setUsdRate(usdRate.value);
+      }
+    } catch (error) {
+      console.error('Failed to fetch fiat rates:', error);
+    }
+  }, []);
+
+  // Set up periodic fiat rate fetching
+  useEffect(() => {
+    if (isConnected) {
+      // Fetch immediately upon connection
+      fetchUsdRate();
+
+      // Then set up interval for every 30 seconds
+      const interval = setInterval(fetchUsdRate, 30000);
+
+      // Clean up interval on disconnect
+      return () => clearInterval(interval);
+    }
+  }, [isConnected, fetchUsdRate]);
 
   // Try to connect with saved mnemonic on app startup
   useEffect(() => {
@@ -273,7 +305,7 @@ const AppContent: React.FC = () => {
                 <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
                   <CollapsingWalletHeader
                     walletInfo={walletInfo}
-                    onRefresh={() => refreshWalletData(true)}
+                    usdRate={usdRate}
                     scrollProgress={scrollProgress}
                   />
                 </div>
@@ -289,7 +321,7 @@ const AppContent: React.FC = () => {
                 <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-between px-6 z-30">
                   <button
                     onClick={() => setIsSendDialogOpen(true)}
-                    className="flex items-center text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+                    className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
                   >
                     <span className="text-xl mr-2">↑</span>
                     <span className="font-medium">Send</span>
@@ -297,7 +329,7 @@ const AppContent: React.FC = () => {
 
                   <button
                     onClick={() => setIsReceiveDialogOpen(true)}
-                    className="flex items-center text-white px-4 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+                    className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
                   >
                     <span className="font-medium">Receive</span>
                     <span className="text-xl ml-2">↓</span>
