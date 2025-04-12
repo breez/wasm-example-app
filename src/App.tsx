@@ -333,7 +333,6 @@ const AppContent: React.FC = () => {
                     isOpen={isReceiveDialogOpen}
                     onClose={handleReceiveDialogClose}
                     walletService={walletService}
-                    transactionsListRef={transactionsContainerRef}
                   />
                 )}
 

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Payment } from '../../pkg/breez_sdk_liquid_wasm';
 import {
   DialogContainer, DialogCard, DialogHeader, PaymentInfoCard,
-  PaymentInfoRow, PrimaryButton,
-  PaymentDetailsSection, CollapsibleCodeField
+  PaymentInfoRow,
+  CollapsibleCodeField
 } from './ui';
 
 interface PaymentDetailsDialogProps {
@@ -50,11 +50,6 @@ const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, on
           {/* General Payment Information */}
           <PaymentInfoCard>
             <PaymentInfoRow
-              label="Type"
-              value={payment.paymentType === 'receive' ? 'Received' : 'Sent'}
-            />
-
-            <PaymentInfoRow
               label="Amount"
               value={`${payment.paymentType === 'receive' ? '+' : '-'} ${payment.amountSat.toLocaleString()} sats`}
             />
@@ -65,118 +60,71 @@ const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, on
             />
 
             <PaymentInfoRow
-              label="Status"
-              value={payment.status}
-            />
-
-            <PaymentInfoRow
               label="Date & Time"
               value={formatDateTime(payment.timestamp)}
             />
-          </PaymentInfoCard>
 
-          {/* Transaction ID if available */}
-          {payment.txId && (
-            <div className="mt-4">
+
+            {payment.details.type === 'lightning' && payment.details.swapId && (
               <CollapsibleCodeField
-                label="Transaction ID"
-                value={payment.txId}
-                isVisible={visibleFields.txId}
-                onToggle={() => toggleField('txId')}
+                label="Swap ID"
+                value={payment.details.swapId}
+                isVisible={visibleFields.swapId}
+                onToggle={() => toggleField('swapId')}
               />
-            </div>
-          )}
+            )}
 
-          {/* Payment Type Specific Details */}
-          {payment.details.type === 'lightning' && (
-            <PaymentDetailsSection title="Lightning Details">
-              {payment.details.swapId && (
+            {payment.details.type === 'lightning' && payment.details.invoice && (
+              <CollapsibleCodeField
+                label="Invoice"
+                value={payment.details.invoice}
+                isVisible={visibleFields.invoice}
+                onToggle={() => toggleField('invoice')}
+              />
+            )}
+
+            {payment.details.type === 'lightning' && payment.details.preimage && (
+              <CollapsibleCodeField
+                label="Payment Preimage"
+                value={payment.details.preimage}
+                isVisible={visibleFields.preimage}
+                onToggle={() => toggleField('preimage')}
+              />
+            )}
+
+            {payment.details.type === 'lightning' && payment.details.destinationPubkey && (
+              <CollapsibleCodeField
+                label="Destination Public Key"
+                value={payment.details.destinationPubkey}
+                isVisible={visibleFields.destinationPubkey}
+                onToggle={() => toggleField('destinationPubkey')}
+              />
+            )}
+            {payment.txId && (
+              <div className="mt-4">
                 <CollapsibleCodeField
-                  label="Swap ID"
-                  value={payment.details.swapId}
-                  isVisible={visibleFields.swapId}
-                  onToggle={() => toggleField('swapId')}
+                  label="Transaction ID"
+                  value={payment.txId}
+                  isVisible={visibleFields.txId}
+                  onToggle={() => toggleField('txId')}
                 />
-              )}
+              </div>
+            )}
 
-              {payment.details.invoice && (
-                <CollapsibleCodeField
-                  label="Invoice"
-                  value={payment.details.invoice}
-                  isVisible={visibleFields.invoice}
-                  onToggle={() => toggleField('invoice')}
-                />
-              )}
+            {payment.details.type === 'bitcoin' && payment.details.swapId && (
+              <CollapsibleCodeField
+                label="Swap ID"
+                value={payment.details.swapId}
+                isVisible={visibleFields.swapId}
+                onToggle={() => toggleField('swapId')}
+              />
+            )}
 
-              {payment.details.preimage && (
-                <CollapsibleCodeField
-                  label="Payment Preimage"
-                  value={payment.details.preimage}
-                  isVisible={visibleFields.preimage}
-                  onToggle={() => toggleField('preimage')}
-                />
-              )}
-
-              {payment.details.destinationPubkey && (
-                <CollapsibleCodeField
-                  label="Destination Public Key"
-                  value={payment.details.destinationPubkey}
-                  isVisible={visibleFields.destinationPubkey}
-                  onToggle={() => toggleField('destinationPubkey')}
-                />
-              )}
-            </PaymentDetailsSection>
-          )}
-
-          {/* Bitcoin payment details */}
-          {payment.details.type === 'bitcoin' && (
-            <PaymentDetailsSection title="Bitcoin Details">
-              {payment.details.swapId && (
-                <CollapsibleCodeField
-                  label="Swap ID"
-                  value={payment.details.swapId}
-                  isVisible={visibleFields.swapId}
-                  onToggle={() => toggleField('swapId')}
-                />
-              )}
-            </PaymentDetailsSection>
-          )}
-
-          {/* Liquid payment details */}
-          {payment.details.type === 'liquid' && (
-            <PaymentDetailsSection title="Liquid Details">
-              {payment.details.assetId && (
-                <>
-                  <PaymentInfoRow
-                    label="Asset ID"
-                    value={`${payment.details.assetId.substring(0, 8)}...`}
-                  />
-
-                  <CollapsibleCodeField
-                    label="Full Asset ID"
-                    value={payment.details.assetId}
-                    isVisible={visibleFields.assetId}
-                    onToggle={() => toggleField('assetId')}
-                  />
-                </>
-              )}
-
-              {payment.details.destination && (
-                <CollapsibleCodeField
-                  label="Destination"
-                  value={payment.details.destination}
-                  isVisible={visibleFields.destination}
-                  onToggle={() => toggleField('destination')}
-                />
-              )}
-            </PaymentDetailsSection>
-          )}
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <PrimaryButton onClick={onClose}>
-            Close
-          </PrimaryButton>
+            <PaymentInfoRow
+              label="Status"
+              value={payment.status}
+            />
+          </PaymentInfoCard>
         </div>
       </DialogCard>
     </DialogContainer>

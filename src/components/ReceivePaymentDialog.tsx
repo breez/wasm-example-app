@@ -110,7 +110,7 @@ const InputForm: React.FC<InputFormProps> = ({
 };
 
 // Component to display QR code with invoice
-const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats, onClose }) => {
+const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats }) => {
   return (
     <div className="space-y-6 flex flex-col items-center">
       <h3 className="text-lg font-semibold text-[rgb(var(--text-white))] self-start">
@@ -124,22 +124,16 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats, onClose
 
         {feeSats > 0 && (
           <Alert type="warning" className="mt-4">
-            A fee of {feeSats} sats is applied to this invoice.
+            <center>A fee of {feeSats} sats is applied to this invoice.</center>
           </Alert>
         )}
-      </div>
-
-      <div className="mt-4 w-full flex justify-end">
-        <PrimaryButton onClick={onClose}>
-          Close
-        </PrimaryButton>
       </div>
     </div>
   );
 };
 
 // Main component
-const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onClose, walletService, transactionsListRef }) => {
+const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onClose, walletService }) => {
   // State
   const [currentStep, setCurrentStep] = useState<ReceiveStep>('loading_limits');
   const [description, setDescription] = useState<string>('');
@@ -230,7 +224,7 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
   };
 
   return (
-    <BottomSheetContainer isOpen={isOpen} onClose={onClose} listRef={transactionsListRef}>
+    <BottomSheetContainer isOpen={isOpen} onClose={onClose} >
       <BottomSheetCard className="bottom-sheet-card">
         <DialogHeader title="Receive Payment" onClose={onClose} />
 

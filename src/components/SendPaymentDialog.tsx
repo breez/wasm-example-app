@@ -3,7 +3,7 @@ import * as breezSdk from '../../pkg/breez_sdk_liquid_wasm';
 import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {
-  DialogContainer, DialogCard, DialogHeader, FormGroup, FormLabel,
+  DialogHeader, FormGroup, FormLabel,
   FormTextarea, FormError, PrimaryButton, SecondaryButton, PaymentInfoCard,
   PaymentInfoRow, PaymentInfoDivider, ResultIcon, ResultMessage, StepContainer, StepContent,
   BottomSheetContainer, BottomSheetCard
@@ -154,7 +154,7 @@ const ResultStep: React.FC<ResultStepProps> = ({ result, error, onClose }) => {
 };
 
 // Main component
-const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, walletService, transactionsListRef }) => {
+const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, walletService }) => {
   // State
   const [currentStep, setCurrentStep] = useState<PaymentStep>('input');
   const [paymentInput, setPaymentInput] = useState<string>('');
@@ -289,7 +289,7 @@ const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, 
   }
 
   return (
-    <BottomSheetContainer isOpen={isOpen} onClose={onClose} listRef={transactionsListRef}>
+    <BottomSheetContainer isOpen={isOpen} onClose={onClose}>
       <BottomSheetCard className="bottom-sheet-card">
         <DialogHeader title="Send Payment" onClose={onClose} />
 

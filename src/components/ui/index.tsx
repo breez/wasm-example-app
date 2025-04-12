@@ -1,4 +1,4 @@
-import React, { ReactNode, forwardRef, useState, useEffect } from 'react';
+import React, { ReactNode, forwardRef } from 'react';
 import QRCode from 'react-qr-code';
 import { Transition } from '@headlessui/react';
 
@@ -371,17 +371,10 @@ export const BottomSheetContainer: React.FC<{
   children: ReactNode;
   className?: string;
   onClose?: () => void;
-  listRef?: React.RefObject<HTMLDivElement>;
-}> = ({ isOpen, children, className = "", onClose, listRef }) => {
-  // Handle outside clicks on the backdrop
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget && onClose) {
-      onClose();
-    }
-  };
+}> = ({ isOpen, children, className = "" }) => {
 
   return (
-    <Transition show={isOpen} as="div" className="fixed inset-y-40 inset-x-40 z-50 overflow-hidden">
+    <Transition show={isOpen} as="div" className="absolute inset-0 z-50 overflow-hidden">
 
       {/* Sheet container - slides up and down */}
       <Transition.Child
@@ -394,7 +387,8 @@ export const BottomSheetContainer: React.FC<{
         leaveTo="translate-y-full"
         className={`mx-auto ${className}`}
         style={{
-          maxWidth: listRef?.current?.offsetWidth || '100%',
+          height: "100%",
+          maxWidth: '100%',
         }}
       >
         {children}
@@ -404,7 +398,7 @@ export const BottomSheetContainer: React.FC<{
 };
 
 export const BottomSheetCard = forwardRef<HTMLDivElement, DialogCardProps>(
-  ({ children, className = "", maxWidth = "md" }, ref) => {
+  ({ children, className = "" }, ref) => {
     return (
       <div
         ref={ref}
