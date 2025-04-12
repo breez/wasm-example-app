@@ -281,7 +281,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[rgb(var(--background-rgb))]">
 
-      <main className="container lg-p-t-20 mx-auto max-w-4xl flex-grow overflow-hidden">
+      <main className="container mx-auto max-w-4xl flex-grow overflow-hidden">
         {error && (
           <div className="bg-red-500 text-white px-4 py-3 rounded mb-4">
             {error}
