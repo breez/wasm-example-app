@@ -302,7 +302,7 @@ const AppContent: React.FC = () => {
                 <MnemonicInput onConnect={(m) => connectWallet(m, true)} />
               </div>
             ) : (
-              <div className="flex flex-col h-[calc(100vh-(20px))] relative">
+              <div className="flex flex-col h-[calc(100dvh)] relative">
                 {/* Show restoration overlay if we're restoring */}
                 {isRestoring && (
                   <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
