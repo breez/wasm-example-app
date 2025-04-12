@@ -357,7 +357,7 @@ const AppContent: React.FC = () => {
                   onClose={handlePaymentDetailsClose}
                 />}
 
-                <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-between px-6 z-30">
+                <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-center px-6 z-30">
                   <button
                     onClick={() => setIsSendDialogOpen(true)}
                     className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
