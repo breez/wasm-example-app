@@ -100,9 +100,8 @@ main {
 /* Add card styles */
 .card {
   background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  padding: 16px;
+  padding: 20px;
 }
 
 .card-no-border {
