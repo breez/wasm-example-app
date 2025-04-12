@@ -402,7 +402,7 @@ export const BottomSheetCard = forwardRef<HTMLDivElement, DialogCardProps>(
     return (
       <div
         ref={ref}
-        className={`card w-full overflow-hidden relative rounded-t-xl shadow-xl ${className}`}
+        className={`card w-full overflow-hidden relative shadow-xl ${className}`}
       >
         {children}
       </div>

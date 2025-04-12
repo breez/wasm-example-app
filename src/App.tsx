@@ -280,11 +280,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[rgb(var(--background-rgb))]">
-      <header className="bg-[rgb(var(--card-bg))] p-4 shadow-md flex justify-between items-center">
-        {/* Header content */}
-      </header>
 
-      <main className="container mx-auto p-4 pb-24 max-w-4xl flex-grow overflow-hidden">
+      <main className="container lg-p-t-20 mx-auto max-w-4xl flex-grow overflow-hidden">
         {error && (
           <div className="bg-red-500 text-white px-4 py-3 rounded mb-4">
             {error}
@@ -292,7 +289,9 @@ const AppContent: React.FC = () => {
         )}
 
         {isLoading ? (
-          <LoadingSpinner />
+          <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
+            <LoadingSpinner />
+          </div>
         ) : (
           <>
             {!isConnected ? (
@@ -303,7 +302,7 @@ const AppContent: React.FC = () => {
                 <MnemonicInput onConnect={(m) => connectWallet(m, true)} />
               </div>
             ) : (
-              <div className="flex flex-col h-[calc(100vh-170px)] relative">
+              <div className="flex flex-col h-[calc(100vh)] relative">
                 {/* Show restoration overlay if we're restoring */}
                 {isRestoring && (
                   <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
