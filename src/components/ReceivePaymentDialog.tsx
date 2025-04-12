@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {
-  DialogContainer, DialogCard, DialogHeader, FormGroup, FormLabel,
+  DialogHeader, FormGroup, FormLabel,
   FormInput, FormError, FormHint, FormDescription, PrimaryButton,
-  QRCodeContainer, CopyableText, Alert, StepContainer
+  QRCodeContainer, CopyableText, Alert, StepContainer, BottomSheetCard, BottomSheetContainer
 } from './ui';
 
 // Types
@@ -139,7 +139,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats, onClose
 };
 
 // Main component
-const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onClose, walletService }) => {
+const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onClose, walletService, transactionsListRef }) => {
   // State
   const [currentStep, setCurrentStep] = useState<ReceiveStep>('loading_limits');
   const [description, setDescription] = useState<string>('');
@@ -229,12 +229,9 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
     }
   };
 
-  // Don't render if not open
-  if (!isOpen) return null;
-
   return (
-    <DialogContainer>
-      <DialogCard maxWidth="md">
+    <BottomSheetContainer isOpen={isOpen} onClose={onClose} listRef={transactionsListRef}>
+      <BottomSheetCard className="bottom-sheet-card">
         <DialogHeader title="Receive Payment" onClose={onClose} />
 
         <StepContainer>
@@ -272,8 +269,8 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
             />
           )}
         </StepContainer>
-      </DialogCard>
-    </DialogContainer>
+      </BottomSheetCard>
+    </BottomSheetContainer>
   );
 };
 

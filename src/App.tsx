@@ -316,6 +316,27 @@ const AppContent: React.FC = () => {
                 >
                   <TransactionList transactions={transactions} />
                 </div>
+
+                {/* Send Payment Dialog - Pass transactionsContainerRef */}
+                {isConnected && (
+                  <SendPaymentDialog
+                    isOpen={isSendDialogOpen}
+                    onClose={handleSendDialogClose}
+                    walletService={walletService}
+                    transactionsListRef={transactionsContainerRef}
+                  />
+                )}
+
+                {/* Receive Payment Dialog - Pass transactionsContainerRef */}
+                {isConnected && (
+                  <ReceivePaymentDialog
+                    isOpen={isReceiveDialogOpen}
+                    onClose={handleReceiveDialogClose}
+                    walletService={walletService}
+                    transactionsListRef={transactionsContainerRef}
+                  />
+                )}
+
                 <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-between px-6 z-30">
                   <button
                     onClick={() => setIsSendDialogOpen(true)}
@@ -337,28 +358,7 @@ const AppContent: React.FC = () => {
             )}
           </>
         )}
-
-        {/* Send Payment Dialog - Pass walletService instead of sdk */}
-        {isConnected && (
-          <SendPaymentDialog
-            isOpen={isSendDialogOpen}
-            onClose={handleSendDialogClose}
-            walletService={walletService}
-          />
-        )}
-
-        {/* Receive Payment Dialog - Pass walletService instead of sdk */}
-        {isConnected && (
-          <ReceivePaymentDialog
-            isOpen={isReceiveDialogOpen}
-            onClose={handleReceiveDialogClose}
-            walletService={walletService}
-          />
-        )}
       </main>
-
-      {/* Bottom Navigation Bar - moved to a more appropriate position */}
-
     </div>
   );
 };

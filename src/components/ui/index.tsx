@@ -1,5 +1,6 @@
-import React, { ReactNode, forwardRef } from 'react';
+import React, { ReactNode, forwardRef, useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
+import { Transition } from '@headlessui/react';
 
 // Dialog Components
 export const DialogContainer: React.FC<{
@@ -363,3 +364,56 @@ export const StepContent: React.FC<{
     </div>
   );
 };
+
+// Bottom Sheet Modal Components
+export const BottomSheetContainer: React.FC<{
+  isOpen: boolean;
+  children: ReactNode;
+  className?: string;
+  onClose?: () => void;
+  listRef?: React.RefObject<HTMLDivElement>;
+}> = ({ isOpen, children, className = "", onClose, listRef }) => {
+  // Handle outside clicks on the backdrop
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget && onClose) {
+      onClose();
+    }
+  };
+
+  return (
+    <Transition show={isOpen} as="div" className="fixed inset-y-40 inset-x-40 z-50 overflow-hidden">
+
+      {/* Sheet container - slides up and down */}
+      <Transition.Child
+        as="div"
+        enter="transform transition ease-out duration-300"
+        enterFrom="translate-y-full"
+        enterTo="translate-y-0"
+        leave="transform transition ease-in duration-200"
+        leaveFrom="translate-y-0"
+        leaveTo="translate-y-full"
+        className={`mx-auto ${className}`}
+        style={{
+          maxWidth: listRef?.current?.offsetWidth || '100%',
+        }}
+      >
+        {children}
+      </Transition.Child>
+    </Transition>
+  );
+};
+
+export const BottomSheetCard = forwardRef<HTMLDivElement, DialogCardProps>(
+  ({ children, className = "", maxWidth = "md" }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={`card w-full overflow-hidden relative rounded-t-xl shadow-xl ${className}`}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+BottomSheetCard.displayName = 'BottomSheetCard';

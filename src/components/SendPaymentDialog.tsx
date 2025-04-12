@@ -5,7 +5,8 @@ import LoadingSpinner from './LoadingSpinner';
 import {
   DialogContainer, DialogCard, DialogHeader, FormGroup, FormLabel,
   FormTextarea, FormError, PrimaryButton, SecondaryButton, PaymentInfoCard,
-  PaymentInfoRow, PaymentInfoDivider, ResultIcon, ResultMessage, StepContainer, StepContent
+  PaymentInfoRow, PaymentInfoDivider, ResultIcon, ResultMessage, StepContainer, StepContent,
+  BottomSheetContainer, BottomSheetCard
 } from './ui';
 
 // Types
@@ -17,6 +18,7 @@ interface SendPaymentDialogProps {
   isOpen: boolean;
   onClose: () => void;
   walletService: typeof walletService;
+  transactionsListRef: React.RefObject<HTMLDivElement>;
 }
 
 interface InputStepProps {
@@ -152,7 +154,7 @@ const ResultStep: React.FC<ResultStepProps> = ({ result, error, onClose }) => {
 };
 
 // Main component
-const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, walletService }) => {
+const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, walletService, transactionsListRef }) => {
   // State
   const [currentStep, setCurrentStep] = useState<PaymentStep>('input');
   const [paymentInput, setPaymentInput] = useState<string>('');
@@ -272,7 +274,7 @@ const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, 
   };
 
   // Don't render if not open
-  if (!isOpen) return null;
+  //if (!isOpen) return null;
 
   // Extract payment details
   let amountSats: number | null = null;
@@ -287,8 +289,8 @@ const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, 
   }
 
   return (
-    <DialogContainer>
-      <DialogCard maxWidth="md">
+    <BottomSheetContainer isOpen={isOpen} onClose={onClose} listRef={transactionsListRef}>
+      <BottomSheetCard className="bottom-sheet-card">
         <DialogHeader title="Send Payment" onClose={onClose} />
 
         <StepContainer>
@@ -341,8 +343,8 @@ const SendPaymentDialog: React.FC<SendPaymentDialogProps> = ({ isOpen, onClose, 
             />
           </StepContent>
         </StepContainer>
-      </DialogCard>
-    </DialogContainer>
+      </BottomSheetCard>
+    </BottomSheetContainer>
   );
 };
 
