@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { Payment } from '../../pkg/breez_sdk_liquid_wasm';
 import {
-  DialogContainer, DialogCard, DialogHeader, PaymentInfoCard,
-  PaymentInfoRow,
-  CollapsibleCodeField
+  DialogHeader, PaymentInfoCard, PaymentInfoRow,
+  CollapsibleCodeField, BottomSheetContainer, BottomSheetCard
 } from './ui';
 
 interface PaymentDetailsDialogProps {
-  payment: Payment;
+  optionalPayment: Payment | null;
   onClose: () => void;
 }
 
-const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, onClose }) => {
+const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ optionalPayment, onClose }) => {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>({
     invoice: false,
     preimage: false,
@@ -41,12 +40,19 @@ const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, on
     }));
   };
 
-  return (
-    <DialogContainer>
-      <DialogCard maxWidth="lg">
-        <DialogHeader title="Payment Details" onClose={onClose} />
+  if (!optionalPayment) return (
+    <BottomSheetContainer isOpen={optionalPayment != null} onClose={onClose}>
+      <BottomSheetCard className="bottom-sheet-card">{
+        <div></div>}</BottomSheetCard>
+    </BottomSheetContainer>
 
-        <div className="space-y-4">
+  );
+  const payment = optionalPayment!;
+  return (
+    <BottomSheetContainer isOpen={optionalPayment != null} onClose={onClose}>
+      <BottomSheetCard className="bottom-sheet-card">
+        <DialogHeader title="Payment Details" onClose={onClose} />
+        <div className="space-y-4 overflow-y-auto">
           {/* General Payment Information */}
           <PaymentInfoCard>
             <PaymentInfoRow
@@ -63,7 +69,6 @@ const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, on
               label="Date & Time"
               value={formatDateTime(payment.timestamp)}
             />
-
 
             {payment.details.type === 'lightning' && payment.details.swapId && (
               <CollapsibleCodeField
@@ -119,15 +124,10 @@ const PaymentDetailsDialog: React.FC<PaymentDetailsDialogProps> = ({ payment, on
                 onToggle={() => toggleField('swapId')}
               />
             )}
-
-            <PaymentInfoRow
-              label="Status"
-              value={payment.status}
-            />
           </PaymentInfoCard>
         </div>
-      </DialogCard>
-    </DialogContainer>
+      </BottomSheetCard>
+    </BottomSheetContainer>
   );
 };
 

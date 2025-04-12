@@ -184,7 +184,7 @@ export const PaymentInfoCard: React.FC<{
   children: ReactNode;
   className?: string;
 }> = ({ children, className = "" }) => (
-  <div className={`bg-[rgb(var(--card-border))] p-4 rounded-lg space-y-2 ${className}`}>
+  <div className={`bg-[rgb(var(--card-border))] p-4 rounded-lg space-y-6 ${className}`}>
     {children}
   </div>
 );

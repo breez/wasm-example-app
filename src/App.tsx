@@ -7,6 +7,7 @@ import MnemonicInput from './components/MnemonicInput';
 import LoadingSpinner from './components/LoadingSpinner';
 import SendPaymentDialog from './components/SendPaymentDialog';
 import ReceivePaymentDialog from './components/ReceivePaymentDialog';
+import PaymentDetailsDialog from './components/PaymentDetailsDialog';
 import { ToastProvider, useToast } from './contexts/ToastContext';
 
 // Main App without toast functionality
@@ -21,6 +22,7 @@ const AppContent: React.FC = () => {
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
   const [isReceiveDialogOpen, setIsReceiveDialogOpen] = useState<boolean>(false);
   const [usdRate, setUsdRate] = useState<number | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
   const { showToast } = useToast();
   const transactionsContainerRef = useRef<HTMLDivElement>(null);
@@ -252,6 +254,16 @@ const AppContent: React.FC = () => {
     }
   };
 
+  // Handler for payment selection from the transaction list
+  const handlePaymentSelected = useCallback((payment: Payment) => {
+    setSelectedPayment(payment);
+  }, []);
+
+  // Handler for closing payment details dialog
+  const handlePaymentDetailsClose = useCallback(() => {
+    setSelectedPayment(null);
+  }, []);
+
   // Handler for closing the send dialog and refreshing data
   const handleSendDialogClose = useCallback(() => {
     setIsSendDialogOpen(false);
@@ -314,10 +326,13 @@ const AppContent: React.FC = () => {
                   className="flex-grow overflow-y-auto"
                   onScroll={handleScroll}
                 >
-                  <TransactionList transactions={transactions} />
+                  <TransactionList
+                    transactions={transactions}
+                    onPaymentSelected={handlePaymentSelected}
+                  />
                 </div>
 
-                {/* Send Payment Dialog - Pass transactionsContainerRef */}
+                {/* Send Payment Dialog */}
                 {isConnected && (
                   <SendPaymentDialog
                     isOpen={isSendDialogOpen}
@@ -327,7 +342,7 @@ const AppContent: React.FC = () => {
                   />
                 )}
 
-                {/* Receive Payment Dialog - Pass transactionsContainerRef */}
+                {/* Receive Payment Dialog */}
                 {isConnected && (
                   <ReceivePaymentDialog
                     isOpen={isReceiveDialogOpen}
@@ -335,6 +350,12 @@ const AppContent: React.FC = () => {
                     walletService={walletService}
                   />
                 )}
+
+                {/* Payment Details Dialog */}
+                {<PaymentDetailsDialog
+                  optionalPayment={selectedPayment}
+                  onClose={handlePaymentDetailsClose}
+                />}
 
                 <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-between px-6 z-30">
                   <button

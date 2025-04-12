@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Payment } from '../../pkg/breez_sdk_liquid_wasm';
-import PaymentDetailsDialog from './PaymentDetailsDialog';
 
 interface TransactionListProps {
   transactions: Payment[];
+  onPaymentSelected: (payment: Payment) => void;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
-
+const TransactionList: React.FC<TransactionListProps> = ({ transactions, onPaymentSelected }) => {
   if (!transactions.length) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6">
-        {/* <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Transaction History</h2>
-        <p className="text-gray-600 dark:text-gray-400 text-center py-4">No transactions found</p> */}
+        {/* No transaction placeholder content */}
       </div>
     );
   }
@@ -44,7 +41,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
     }
   };
 
-  // Get transaction icon based on type (now using plus/minus icons)
+  // Get transaction icon based on type
   const getTransactionIcon = (payment: Payment): string => {
     if (payment.paymentType === 'receive') {
       return '+';
@@ -87,23 +84,23 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
 
   return (
     <div className="card-no-border">
-      <ul className="space-y-2"> {/* Reduced space between items */}
+      <ul className="space-y-2">
         {transactions.map((tx) => (
           <li
             key={tx.txId || `${tx.timestamp}-${tx.amountSat}`}
             className="list-item flex justify-between items-center py-2 px-3 hover:bg-[rgb(var(--card-border))] cursor-pointer transition-colors"
-            onClick={() => setSelectedPayment(tx)}
+            onClick={() => onPaymentSelected(tx)}
           >
-            <div className="flex flex-none items-center space-x-3"> {/* Reduced horizontal spacing */}
+            <div className="flex flex-none items-center space-x-3">
               <div className={`w-8 h-8 rounded-full bg-[rgb(var(--card-border))] flex items-center justify-center ${getTransactionColor(tx)}`}>
                 <span className="text-lg font-bold">{getTransactionIcon(tx)}</span>
               </div>
-              <div className="flex flex-none flex-col"> {/* Removed vertical spacing */}
+              <div className="flex flex-none flex-col">
                 <p className="text-sm text-[rgb(var(--text-white))]">{getDescription(tx)}</p>
                 <p className="text-[rgb(var(--text-white))] opacity-70 text-xs">{formatTimeAgo(tx.timestamp)} {tx.status === 'pending' && <span className='text-yellow-400'>(Pending)</span>}</p>
               </div>
 
-              <div className="ml-auto pl-3 flex-1"> {/* Added ml-auto to push to right and pl-3 for spacing */}
+              <div className="ml-auto pl-3 flex-1">
                 <div className="flex flex-col items-end justify-center">
                   <p className={`font-medium text-sm ${tx.paymentType === 'receive' ? 'text-[rgb(var(--accent-green))]' : 'text-[rgb(var(--accent-red))]'}`}>
                     {tx.paymentType === 'receive' ? '+' : '-'} {tx.amountSat.toLocaleString()}
@@ -112,18 +109,9 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
                 </div>
               </div>
             </div>
-
           </li>
         ))}
       </ul>
-
-      {/* Show payment details dialog when a payment is selected */}
-      {selectedPayment && (
-        <PaymentDetailsDialog
-          payment={selectedPayment}
-          onClose={() => setSelectedPayment(null)}
-        />
-      )}
     </div>
   );
 };
