@@ -227,6 +227,10 @@ footer {
   overflow: hidden;
 }
 
+.main-wrapper {
+  height: 100vh;
+}
+
 /* Bottom Navigation Bar */
 .bottom-nav {
   background-color: var(--primary-blue);
