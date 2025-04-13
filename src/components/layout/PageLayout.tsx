@@ -26,7 +26,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             </h1>
           </div>
           {onBack && (
-            <button onClick={onBack} className="text-xl absolute top-4 left-4">&larr;</button>
+            <button onClick={onBack} className="text-xl absolute top-4 left-4">{"<-"}</button>
           )}
         </header>
       )}
