@@ -10,21 +10,29 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
   return (
     <div className="h-[calc(100dvh)] bg-[var(--card-bg)] flex p-6 flex-col px-4 text-center items-center">
       {/* Logo/Header */}
-      {/* <div className="mb-0">
+      <div className="mb-0">
         <h1 className="text-4xl font-bold text-[rgb(var(--text-white))] mb-2">
           Lightning Wallet
         </h1>
         <p className="text-xl text-[rgb(var(--text-white))] opacity-80">
           Powered by Breez SDK
         </p>
-      </div> */}
+      </div>
 
-      <div className="flex-1"></div>
+      {/* Feature highlights */}
+      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mt-16">
+
+        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
+          <div className="text-3xl mb-3">🔒</div>
+          <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Non-Custodial</h2>
+          <p className="text-[rgb(var(--text-white))] opacity-80">You control your keys and your funds</p>
+        </div>
+      </div>
 
 
 
       {/* Call-to-action buttons */}
-      <div className="space-y-4 w-full max-w-md">
+      <div className="space-y-4 w-full max-w-md mt-16">
         <PrimaryButton
           onClick={onCreateNewWallet}
           className="w-full py-4 text-lg"
@@ -32,7 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
           Create New Wallet
         </PrimaryButton>
 
-        {/* <div className="relative">
+        <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-600"></div>
           </div>
@@ -41,7 +49,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
               or
             </span>
           </div>
-        </div> */}
+        </div>
 
         <button
           onClick={onRestoreWallet}
