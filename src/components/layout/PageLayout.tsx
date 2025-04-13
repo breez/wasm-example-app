@@ -17,7 +17,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   showHeader = true,
 }) => {
   return (
-    <div className="min-h-screen w-full flex flex-col bg-[var(--card-bg)]">
+    <div className="h-full w-full flex flex-col bg-[var(--card-bg)]">
       {showHeader && (
         <header className="p-4 shadow-md relative">
           <div className="container mx-auto">
