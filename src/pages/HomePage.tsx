@@ -20,7 +20,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
       </div>
 
       {/* Feature highlights */}
-      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mb-16 mt-16">
+      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mt-16">
         <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
           <div className="text-3xl mb-3">⚡</div>
           <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Lightning Fast</h2>
