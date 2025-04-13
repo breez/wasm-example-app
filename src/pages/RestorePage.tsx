@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import MnemonicInput from '../components/MnemonicInput';
 import PageLayout from '../components/layout/PageLayout';
-import { PrimaryButton, SecondaryButton } from '../components/ui';
+import { PrimaryButton } from '../components/ui';
 
 interface RestorePageProps {
   onConnect: (mnemonic: string) => void;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as bip39 from 'bip39';
-import { PrimaryButton, SecondaryButton } from '../components/ui';
+import { PrimaryButton } from '../components/ui';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageLayout from '../components/layout/PageLayout';
 
@@ -14,7 +14,6 @@ interface GeneratePageProps {
 const GeneratePage: React.FC<GeneratePageProps> = ({
   onMnemonicConfirmed,
   onBack,
-  error,
   onClearError
 }) => {
   const [mnemonic, setMnemonic] = useState<string>('');

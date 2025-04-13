@@ -4,7 +4,7 @@ import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {
   DialogHeader, FormGroup, FormLabel,
-  FormTextarea, FormError, PrimaryButton, SecondaryButton, PaymentInfoCard,
+  FormTextarea, FormError, PrimaryButton, PaymentInfoCard,
   PaymentInfoRow, PaymentInfoDivider, ResultIcon, ResultMessage, StepContainer, StepContent,
   BottomSheetContainer, BottomSheetCard
 } from './ui';
@@ -86,7 +86,6 @@ const ConfirmStep: React.FC<ConfirmStepProps> = ({
   feesSat,
   error,
   isLoading,
-  onBack,
   onConfirm,
 }) => {
   return (

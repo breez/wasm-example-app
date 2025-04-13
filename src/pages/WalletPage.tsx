@@ -7,7 +7,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SendPaymentDialog from '../components/SendPaymentDialog';
 import ReceivePaymentDialog from '../components/ReceivePaymentDialog';
 import PaymentDetailsDialog from '../components/PaymentDetailsDialog';
-import PageLayout from '../components/layout/PageLayout';
 
 interface WalletPageProps {
   walletInfo: GetInfoResponse | null;
@@ -25,8 +24,6 @@ const WalletPage: React.FC<WalletPageProps> = ({
   usdRate,
   refreshWalletData,
   isRestoring,
-  error,
-  onClearError
 }) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
