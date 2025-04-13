@@ -18,18 +18,16 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
           Powered by Breez SDK
         </p>
       </div>
+      <div className="flex-1"></div>
 
       {/* Feature highlights */}
-      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mt-16">
-
-        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
-          <div className="text-3xl mb-3">🔒</div>
-          <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Non-Custodial</h2>
-          <p className="text-[rgb(var(--text-white))] opacity-80">You control your keys and your funds</p>
-        </div>
+      <div className="justify-self-center align-self-center bg-[rgb(var(--card-bg))] rounded-lg shadow-lg justify-center">
+        <div className="text-3xl mb-3">🔒</div>
+        <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Non-Custodial</h2>
+        <p className="text-[rgb(var(--text-white))] opacity-80">You control your keys and your funds</p>
       </div>
 
-
+      <div className="flex-1"></div>
 
       {/* Call-to-action buttons */}
       <div className="space-y-4 w-full max-w-md mt-16">
