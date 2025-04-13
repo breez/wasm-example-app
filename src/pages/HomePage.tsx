@@ -8,7 +8,7 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet }) => {
   return (
-    <div className="h-[calc(100dvh)] bg-[var(--card-bg)] flex p-6 flex-col px-4 text-center items-center">
+    <div className="h-[calc(100dvh-20px)] bg-[var(--card-bg)] flex p-6 flex-col px-4 text-center items-center">
       {/* Logo/Header */}
       <div className="mb-0">
         <h1 className="text-4xl font-bold text-[rgb(var(--text-white))] mb-2">
