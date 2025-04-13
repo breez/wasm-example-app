@@ -62,6 +62,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
         >
           Restore Existing Wallet
         </button>
+        <div></div>
       </div>
     </div>
   );

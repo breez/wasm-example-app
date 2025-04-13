@@ -69,7 +69,7 @@ const WalletPage: React.FC<WalletPageProps> = ({
 
   return (
     //<PageLayout showHeader={false} onClearError={onClearError}>
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col h-full relative bg-[var(--card-bg)]">
       {/* Show restoration overlay if we're restoring */}
       {isRestoring && (
         <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
