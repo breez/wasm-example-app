@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { GetInfoResponse, Payment, SdkEvent } from '../pkg/breez_sdk_liquid_wasm';
 import * as walletService from './services/walletService';
-import CollapsingWalletHeader from './components/CollapsingWalletHeader';
-import TransactionList from './components/TransactionList';
-import MnemonicInput from './components/MnemonicInput';
 import LoadingSpinner from './components/LoadingSpinner';
-import SendPaymentDialog from './components/SendPaymentDialog';
-import ReceivePaymentDialog from './components/ReceivePaymentDialog';
-import PaymentDetailsDialog from './components/PaymentDetailsDialog';
-import HomePage from './components/HomePage';
-import GenerateMnemonicPage from './components/GenerateMnemonicPage';
 import { ToastProvider, useToast } from './contexts/ToastContext';
+
+// Import our page components
+import HomePage from './pages/HomePage';
+import RestorePage from './pages/RestorePage';
+import GeneratePage from './pages/GeneratePage';
+import WalletPage from './pages/WalletPage';
 
 // Main App without toast functionality
 const AppContent: React.FC = () => {
@@ -23,28 +21,12 @@ const AppContent: React.FC = () => {
   const [walletInfo, setWalletInfo] = useState<GetInfoResponse | null>(null);
   const [transactions, setTransactions] = useState<Payment[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
-  const [isReceiveDialogOpen, setIsReceiveDialogOpen] = useState<boolean>(false);
   const [usdRate, setUsdRate] = useState<number | null>(null);
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
   const { showToast } = useToast();
-  const transactionsContainerRef = useRef<HTMLDivElement>(null);
-  const collapseThreshold = 100; // pixels of scroll before header is fully collapsed
 
   // Add a ref to store the event listener ID
   const eventListenerIdRef = useRef<string | null>(null);
-
-  // Handle scroll events
-  const handleScroll = useCallback(() => {
-    if (transactionsContainerRef.current) {
-      const scrollTop = transactionsContainerRef.current.scrollTop;
-      // Calculate scroll progress from 0 to 1
-      const progress = Math.min(1, scrollTop / collapseThreshold);
-      setScrollProgress(progress);
-    }
-  }, [collapseThreshold]);
 
   // Function to refresh wallet data (usable via a callback)
   const refreshWalletData = useCallback(async (showLoading: boolean = true) => {
@@ -103,11 +85,6 @@ const AppContent: React.FC = () => {
             'success',
             `Payment Received: ${amountStr}`,
           );
-
-          // Close the receive dialog if it's open
-          if (isReceiveDialogOpen) {
-            setIsReceiveDialogOpen(false);
-          }
         } else {
           // For sent payments
           showToast(
@@ -121,7 +98,6 @@ const AppContent: React.FC = () => {
 
       refreshWalletData(false);
     } else if (event.type === 'paymentFailed') {
-
       showToast(
         'error',
         'Payment Failed',
@@ -137,13 +113,8 @@ const AppContent: React.FC = () => {
         `Payment Processing${amountStr ? `: ${amountStr}` : ''}`,
         'Your payment is being processed...'
       );
-
-      // Close the receive dialog if it's open
-      if (isReceiveDialogOpen) {
-        setIsReceiveDialogOpen(false);
-      }
     }
-  }, [refreshWalletData, showToast, isReceiveDialogOpen, isRestoring]);
+  }, [refreshWalletData, showToast, isRestoring]);
 
   // Function to fetch fiat rates (USD specifically)
   const fetchUsdRate = useCallback(async () => {
@@ -263,34 +234,11 @@ const AppContent: React.FC = () => {
     }
   };
 
-  // Handler for payment selection from the transaction list
-  const handlePaymentSelected = useCallback((payment: Payment) => {
-    setSelectedPayment(payment);
-  }, []);
-
-  // Handler for closing payment details dialog
-  const handlePaymentDetailsClose = useCallback(() => {
-    setSelectedPayment(null);
-  }, []);
-
-  // Handler for closing the send dialog and refreshing data
-  const handleSendDialogClose = useCallback(() => {
-    setIsSendDialogOpen(false);
-    // Refresh wallet data to show any new transactions
-    refreshWalletData(false);
-  }, [refreshWalletData]);
-
-  // Handler for closing the receive dialog and refreshing data
-  const handleReceiveDialogClose = useCallback(() => {
-    setIsReceiveDialogOpen(false);
-    // Refresh wallet data to show any new transactions
-    refreshWalletData(false);
-  }, [refreshWalletData]);
-
   // Navigation handlers
   const navigateToRestore = () => setCurrentScreen('restore');
   const navigateToGenerate = () => setCurrentScreen('generate');
   const navigateToHome = () => setCurrentScreen('home');
+  const clearError = () => setError(null);
 
   // Determine which screen to render
   const renderCurrentScreen = () => {
@@ -313,99 +261,34 @@ const AppContent: React.FC = () => {
 
       case 'restore':
         return (
-          <div className="container mx-auto max-w-md py-8 px-4">
-            <h1 className="text-2xl font-bold text-[rgb(var(--text-white))] mb-6">
-              Restore Wallet
-            </h1>
-            <MnemonicInput
-              onConnect={(mnemonic) => connectWallet(mnemonic, true)}
-              onBack={navigateToHome}
-            />
-          </div>
+          <RestorePage
+            onConnect={(mnemonic) => connectWallet(mnemonic, true)}
+            onBack={navigateToHome}
+            onClearError={clearError}
+          />
         );
 
       case 'generate':
         return (
-          <GenerateMnemonicPage
+          <GeneratePage
             onMnemonicConfirmed={(mnemonic) => connectWallet(mnemonic, false)}
             onBack={navigateToHome}
+            error={error}
+            onClearError={clearError}
           />
         );
 
       case 'wallet':
         return (
-          <div className="flex flex-col h-[calc(100dvh)] relative">
-            {/* Show restoration overlay if we're restoring */}
-            {isRestoring && (
-              <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
-                <LoadingSpinner text="Restoring wallet data..." />
-              </div>
-            )}
-
-            {/* Fixed position header that collapses on scroll */}
-            <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
-              <CollapsingWalletHeader
-                walletInfo={walletInfo}
-                usdRate={usdRate}
-                scrollProgress={scrollProgress}
-              />
-            </div>
-
-            {/* Scrollable transaction list */}
-            <div
-              ref={transactionsContainerRef}
-              className="flex-grow overflow-y-auto"
-              onScroll={handleScroll}
-            >
-              <TransactionList
-                transactions={transactions}
-                onPaymentSelected={handlePaymentSelected}
-              />
-            </div>
-
-            {/* Send Payment Dialog */}
-            {isConnected && (
-              <SendPaymentDialog
-                isOpen={isSendDialogOpen}
-                onClose={handleSendDialogClose}
-                walletService={walletService}
-                transactionsListRef={transactionsContainerRef}
-              />
-            )}
-
-            {/* Receive Payment Dialog */}
-            {isConnected && (
-              <ReceivePaymentDialog
-                isOpen={isReceiveDialogOpen}
-                onClose={handleReceiveDialogClose}
-                walletService={walletService}
-              />
-            )}
-
-            {/* Payment Details Dialog */}
-            <PaymentDetailsDialog
-              optionalPayment={selectedPayment}
-              onClose={handlePaymentDetailsClose}
-            />
-
-            <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-center px-6 z-30">
-              <button
-                onClick={() => setIsSendDialogOpen(true)}
-                className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
-              >
-                <span className="text-xl mr-2">↑</span>
-                <span className="font-medium">Send</span>
-              </button>
-
-              <button
-                onClick={() => setIsReceiveDialogOpen(true)}
-                className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
-              >
-                <span className="font-medium">Receive</span>
-                <span className="text-xl ml-2">↓</span>
-              </button>
-            </div>
-          </div>
+          <WalletPage
+            walletInfo={walletInfo}
+            transactions={transactions}
+            usdRate={usdRate}
+            refreshWalletData={refreshWalletData}
+            isRestoring={isRestoring}
+            error={error}
+            onClearError={clearError}
+          />
         );
 
       default:
@@ -413,32 +296,18 @@ const AppContent: React.FC = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[rgb(var(--background-rgb))]">
-      <main className="container mx-auto max-w-4xl flex-grow overflow-hidden">
-        {error && (
-          <div className="bg-red-500 text-white px-4 py-3 rounded mb-4 mt-4 mx-4">
-            {error}
-            <button
-              onClick={() => setError(null)}
-              className="float-right text-white"
-            >
-              &times;
-            </button>
-          </div>
-        )}
-
-        {renderCurrentScreen()}
-      </main>
-    </div>
-  );
+  return renderCurrentScreen();
 };
 
 // Wrap the App with ToastProvider
 function App() {
   return (
     <ToastProvider>
-      <AppContent />
+      <div className="flex-grow flex main-wrapper">
+        <div className="flex-grow max-w-4xl mx-auto">
+          <AppContent />
+        </div>
+      </div>
     </ToastProvider>
   );
 }

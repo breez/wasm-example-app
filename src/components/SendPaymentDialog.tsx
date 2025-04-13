@@ -67,7 +67,7 @@ const InputStep: React.FC<InputStepProps> = ({
 
       <FormError error={error} />
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-center">
         <PrimaryButton
           onClick={onNext}
           disabled={isLoading || !paymentInput.trim()}
@@ -91,9 +91,6 @@ const ConfirmStep: React.FC<ConfirmStepProps> = ({
 }) => {
   return (
     <FormGroup>
-      <h3 className="text-lg font-semibold text-[rgb(var(--text-white))]">
-        Confirm Payment
-      </h3>
 
       <PaymentInfoCard>
         <PaymentInfoRow
@@ -114,10 +111,7 @@ const ConfirmStep: React.FC<ConfirmStepProps> = ({
 
       <FormError error={error} />
 
-      <div className="mt-6 flex justify-between">
-        <SecondaryButton onClick={onBack} disabled={isLoading}>
-          Back
-        </SecondaryButton>
+      <div className="mt-6 flex justify-center">
         <PrimaryButton onClick={onConfirm} disabled={isLoading}>
           {isLoading ? (
             <LoadingSpinner text="Processing..." size="small" />

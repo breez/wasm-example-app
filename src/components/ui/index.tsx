@@ -49,11 +49,11 @@ export const DialogHeader: React.FC<{
   title: string;
   onClose: () => void;
 }> = ({ title, onClose }) => (
-  <div className="flex justify-between items-center mb-4">
+  <div className="flex justify-center items-center mb-4 relative">
     <h2 className="text-xl font-bold text-[rgb(var(--text-white))]">{title}</h2>
     <button
       onClick={onClose}
-      className="text-[rgb(var(--text-white))] hover:text-[rgb(var(--accent-red))] text-2xl"
+      className="right-0 top-0 absolute text-[rgb(var(--text-white))] hover:text-[rgb(var(--accent-red))] text-2xl"
     >
       &times;
     </button>
@@ -342,7 +342,7 @@ export const StepContainer: React.FC<{
   children: ReactNode;
   className?: string;
 }> = ({ children, className = "" }) => (
-  <div className={`relative overflow-hidden ${className}`} style={{ minHeight: '240px' }}>
+  <div className={`relative ${className}`} style={{ minHeight: '240px' }}>
     {children}
   </div>
 );

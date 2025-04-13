@@ -1,5 +1,5 @@
 import React from 'react';
-import { PrimaryButton } from './ui';
+import { PrimaryButton } from '../components/ui';
 
 interface HomePageProps {
   onRestoreWallet: () => void;
@@ -8,31 +8,33 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet }) => {
   return (
-    <div className="flex p-6 flex-col items-center justify-center min-h-screen px-4 text-center">
+    <div className="h-[calc(100dvh)] bg-[var(--card-bg)] flex p-6 flex-col min-h-screen px-4 text-center items-center">
       {/* Logo/Header */}
       <div className="mb-0">
         <h1 className="text-4xl font-bold text-[rgb(var(--text-white))] mb-2">
-          Web Wallet
+          Lightning Wallet
         </h1>
         <p className="text-xl text-[rgb(var(--text-white))] opacity-80">
-          Fast, Non-Custodial Lightning
+          Powered by Breez SDK
         </p>
       </div>
 
       {/* Feature highlights */}
-      <div className="flex justify-items-center items-center flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mb-12">
-        <div className="bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
+      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mb-16 mt-16">
+        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
           <div className="text-3xl mb-3">⚡</div>
           <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Lightning Fast</h2>
           <p className="text-[rgb(var(--text-white))] opacity-80">Instant payments with minimal fees</p>
         </div>
 
-        <div className="bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
+        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
           <div className="text-3xl mb-3">🔒</div>
           <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Non-Custodial</h2>
           <p className="text-[rgb(var(--text-white))] opacity-80">You control your keys and your funds</p>
         </div>
       </div>
+
+      <div className="flex-1"></div>
 
       {/* Call-to-action buttons */}
       <div className="space-y-4 w-full max-w-md">

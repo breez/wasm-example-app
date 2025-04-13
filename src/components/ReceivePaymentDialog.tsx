@@ -54,9 +54,6 @@ const InputForm: React.FC<InputFormProps> = ({
   return (
     <FormGroup>
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-[rgb(var(--text-white))]">
-          Create Lightning Invoice
-        </h3>
         <FormDescription>
           Fill in the details to generate a Lightning invoice
         </FormDescription>
@@ -95,7 +92,7 @@ const InputForm: React.FC<InputFormProps> = ({
         <FormError error={error} />
       </FormGroup>
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-center">
         <PrimaryButton
           onClick={onSubmit}
           disabled={isLoading}
@@ -113,9 +110,6 @@ const InputForm: React.FC<InputFormProps> = ({
 const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats }) => {
   return (
     <div className="space-y-6 flex flex-col items-center">
-      <h3 className="text-lg font-semibold text-[rgb(var(--text-white))] self-start">
-        Lightning Invoice
-      </h3>
 
       <QRCodeContainer value={invoice} />
 
@@ -123,7 +117,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats }) => {
         <CopyableText text={invoice} />
 
         {feeSats > 0 && (
-          <Alert type="warning" className="mt-4">
+          <Alert type="warning" className="mt-8">
             <center>A fee of {feeSats} sats is applied to this invoice.</center>
           </Alert>
         )}
