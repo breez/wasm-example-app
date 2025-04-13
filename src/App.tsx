@@ -8,10 +8,15 @@ import LoadingSpinner from './components/LoadingSpinner';
 import SendPaymentDialog from './components/SendPaymentDialog';
 import ReceivePaymentDialog from './components/ReceivePaymentDialog';
 import PaymentDetailsDialog from './components/PaymentDetailsDialog';
+import HomePage from './components/HomePage';
+import GenerateMnemonicPage from './components/GenerateMnemonicPage';
 import { ToastProvider, useToast } from './contexts/ToastContext';
 
 // Main App without toast functionality
 const AppContent: React.FC = () => {
+  // Screen navigation state
+  const [currentScreen, setCurrentScreen] = useState<'home' | 'restore' | 'generate' | 'wallet'>('home');
+
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRestoring, setIsRestoring] = useState<boolean>(false);
@@ -171,25 +176,28 @@ const AppContent: React.FC = () => {
 
   // Try to connect with saved mnemonic on app startup
   useEffect(() => {
-    const connectWithSavedMnemonic = async () => {
+    const checkForExistingWallet = async () => {
       const savedMnemonic = walletService.getSavedMnemonic();
+
       if (savedMnemonic) {
         try {
           setIsLoading(true);
           await connectWallet(savedMnemonic, false);
+          setCurrentScreen('wallet'); // Navigate to wallet screen
         } catch (error) {
           console.error('Failed to connect with saved mnemonic:', error);
           setError('Failed to connect with saved mnemonic. Please try again.');
           walletService.clearMnemonic();
-        } finally {
+          setCurrentScreen('home'); // Go back to home screen on failure
           setIsLoading(false);
         }
       } else {
+        setCurrentScreen('home'); // Show home screen if no saved mnemonic
         setIsLoading(false);
       }
     };
 
-    connectWithSavedMnemonic();
+    checkForExistingWallet();
 
     // Clean up when unmounting
     return () => {
@@ -244,6 +252,7 @@ const AppContent: React.FC = () => {
       setTransactions(txns);
 
       setIsConnected(true);
+      setCurrentScreen('wallet'); // Navigate to wallet screen
       // We'll keep isLoading true until first sync for new wallets
       setIsLoading(false);
     } catch (error) {
@@ -278,105 +287,148 @@ const AppContent: React.FC = () => {
     refreshWalletData(false);
   }, [refreshWalletData]);
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[rgb(var(--background-rgb))]">
+  // Navigation handlers
+  const navigateToRestore = () => setCurrentScreen('restore');
+  const navigateToGenerate = () => setCurrentScreen('generate');
+  const navigateToHome = () => setCurrentScreen('home');
 
-      <main className="container mx-auto max-w-4xl flex-grow overflow-hidden">
-        {error && (
-          <div className="bg-red-500 text-white px-4 py-3 rounded mb-4">
-            {error}
+  // Determine which screen to render
+  const renderCurrentScreen = () => {
+    if (isLoading) {
+      return (
+        <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      );
+    }
+
+    switch (currentScreen) {
+      case 'home':
+        return (
+          <HomePage
+            onRestoreWallet={navigateToRestore}
+            onCreateNewWallet={navigateToGenerate}
+          />
+        );
+
+      case 'restore':
+        return (
+          <div className="container mx-auto max-w-md py-8 px-4">
+            <h1 className="text-2xl font-bold text-[rgb(var(--text-white))] mb-6">
+              Restore Wallet
+            </h1>
+            <MnemonicInput
+              onConnect={(mnemonic) => connectWallet(mnemonic, true)}
+              onBack={navigateToHome}
+            />
           </div>
-        )}
+        );
 
-        {isLoading ? (
-          <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
-            <LoadingSpinner />
-          </div>
-        ) : (
-          <>
-            {!isConnected ? (
-              <div className="mt-8">
-                <h2 className="text-xl font-semibold mb-4 text-[rgb(var(--text-white))]">
-                  Connect Your Wallet
-                </h2>
-                <MnemonicInput onConnect={(m) => connectWallet(m, true)} />
-              </div>
-            ) : (
-              <div className="flex flex-col h-[calc(100dvh)] relative">
-                {/* Show restoration overlay if we're restoring */}
-                {isRestoring && (
-                  <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
-                    <LoadingSpinner text="Restoring wallet data..." />
-                  </div>
-                )}
+      case 'generate':
+        return (
+          <GenerateMnemonicPage
+            onMnemonicConfirmed={(mnemonic) => connectWallet(mnemonic, false)}
+            onBack={navigateToHome}
+          />
+        );
 
-                {/* Fixed position header that collapses on scroll */}
-                <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
-                  <CollapsingWalletHeader
-                    walletInfo={walletInfo}
-                    usdRate={usdRate}
-                    scrollProgress={scrollProgress}
-                  />
-                </div>
-
-                {/* Scrollable transaction list */}
-                <div
-                  ref={transactionsContainerRef}
-                  className="flex-grow overflow-y-auto"
-                  onScroll={handleScroll}
-                >
-                  <TransactionList
-                    transactions={transactions}
-                    onPaymentSelected={handlePaymentSelected}
-                  />
-                </div>
-
-                {/* Send Payment Dialog */}
-                {isConnected && (
-                  <SendPaymentDialog
-                    isOpen={isSendDialogOpen}
-                    onClose={handleSendDialogClose}
-                    walletService={walletService}
-                    transactionsListRef={transactionsContainerRef}
-                  />
-                )}
-
-                {/* Receive Payment Dialog */}
-                {isConnected && (
-                  <ReceivePaymentDialog
-                    isOpen={isReceiveDialogOpen}
-                    onClose={handleReceiveDialogClose}
-                    walletService={walletService}
-                  />
-                )}
-
-                {/* Payment Details Dialog */}
-                {<PaymentDetailsDialog
-                  optionalPayment={selectedPayment}
-                  onClose={handlePaymentDetailsClose}
-                />}
-
-                <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-center px-6 z-30">
-                  <button
-                    onClick={() => setIsSendDialogOpen(true)}
-                    className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
-                  >
-                    <span className="text-xl mr-2">↑</span>
-                    <span className="font-medium">Send</span>
-                  </button>
-
-                  <button
-                    onClick={() => setIsReceiveDialogOpen(true)}
-                    className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
-                  >
-                    <span className="font-medium">Receive</span>
-                    <span className="text-xl ml-2">↓</span>
-                  </button>
-                </div>
+      case 'wallet':
+        return (
+          <div className="flex flex-col h-[calc(100dvh)] relative">
+            {/* Show restoration overlay if we're restoring */}
+            {isRestoring && (
+              <div className="absolute inset-0 bg-[rgb(var(--background-rgb))] bg-opacity-80 z-50 flex items-center justify-center">
+                <LoadingSpinner text="Restoring wallet data..." />
               </div>
             )}
-          </>
+
+            {/* Fixed position header that collapses on scroll */}
+            <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
+              <CollapsingWalletHeader
+                walletInfo={walletInfo}
+                usdRate={usdRate}
+                scrollProgress={scrollProgress}
+              />
+            </div>
+
+            {/* Scrollable transaction list */}
+            <div
+              ref={transactionsContainerRef}
+              className="flex-grow overflow-y-auto"
+              onScroll={handleScroll}
+            >
+              <TransactionList
+                transactions={transactions}
+                onPaymentSelected={handlePaymentSelected}
+              />
+            </div>
+
+            {/* Send Payment Dialog */}
+            {isConnected && (
+              <SendPaymentDialog
+                isOpen={isSendDialogOpen}
+                onClose={handleSendDialogClose}
+                walletService={walletService}
+                transactionsListRef={transactionsContainerRef}
+              />
+            )}
+
+            {/* Receive Payment Dialog */}
+            {isConnected && (
+              <ReceivePaymentDialog
+                isOpen={isReceiveDialogOpen}
+                onClose={handleReceiveDialogClose}
+                walletService={walletService}
+              />
+            )}
+
+            {/* Payment Details Dialog */}
+            <PaymentDetailsDialog
+              optionalPayment={selectedPayment}
+              onClose={handlePaymentDetailsClose}
+            />
+
+            <div className="bottom-bar h-16 bg-[var(--primary-blue)] shadow-lg flex items-center justify-center px-6 z-30">
+              <button
+                onClick={() => setIsSendDialogOpen(true)}
+                className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+              >
+                <span className="text-xl mr-2">↑</span>
+                <span className="font-medium">Send</span>
+              </button>
+
+              <button
+                onClick={() => setIsReceiveDialogOpen(true)}
+                className="flex items-center text-white px-16 py-2 rounded-lg hover:bg-[var(--secondary-blue)] transition-colors"
+              >
+                <span className="font-medium">Receive</span>
+                <span className="text-xl ml-2">↓</span>
+              </button>
+            </div>
+          </div>
+        );
+
+      default:
+        return <div>Unknown screen</div>;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[rgb(var(--background-rgb))]">
+      <main className="container mx-auto max-w-4xl flex-grow overflow-hidden">
+        {error && (
+          <div className="bg-red-500 text-white px-4 py-3 rounded mb-4 mt-4 mx-4">
+            {error}
+            <button
+              onClick={() => setError(null)}
+              className="float-right text-white"
+            >
+              &times;
+            </button>
+          </div>
         )}
+
+        {renderCurrentScreen()}
       </main>
     </div>
   );
