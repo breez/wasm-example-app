@@ -10,14 +10,14 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
   return (
     <div className="h-[calc(100dvh)] bg-[var(--card-bg)] flex p-6 flex-col px-4 text-center items-center">
       {/* Logo/Header */}
-      <div className="mb-0">
+      {/* <div className="mb-0">
         <h1 className="text-4xl font-bold text-[rgb(var(--text-white))] mb-2">
           Lightning Wallet
         </h1>
         <p className="text-xl text-[rgb(var(--text-white))] opacity-80">
           Powered by Breez SDK
         </p>
-      </div>
+      </div> */}
 
       <div className="flex-1"></div>
 
@@ -32,7 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
           Create New Wallet
         </PrimaryButton>
 
-        <div className="relative">
+        {/* <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-600"></div>
           </div>
@@ -41,7 +41,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
               or
             </span>
           </div>
-        </div>
+        </div> */}
 
         <button
           onClick={onRestoreWallet}
