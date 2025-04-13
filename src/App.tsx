@@ -303,7 +303,7 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <ToastProvider>
-      <div className="flex-grow flex main-wrapper">
+      <div className="flex-grow flex main-wrapper h-[calc(100dvh)]">
         <div className="flex-grow max-w-4xl mx-auto">
           <AppContent />
         </div>
