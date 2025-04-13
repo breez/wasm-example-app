@@ -19,25 +19,12 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
         </p>
       </div>
 
-      {/* Feature highlights */}
-      <div className="flex justify-center justify-items-center items-center grid grid-cols-1 md:grid-cols-2 max-w-4xl mt-16">
-        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
-          <div className="text-3xl mb-3">⚡</div>
-          <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Lightning Fast</h2>
-          <p className="text-[rgb(var(--text-white))] opacity-80">Instant payments with minimal fees</p>
-        </div>
-
-        <div className="flex-0 bg-[rgb(var(--card-bg))] rounded-lg shadow-lg">
-          <div className="text-3xl mb-3">🔒</div>
-          <h2 className="text-xl font-semibold text-[rgb(var(--text-white))] mb-2">Non-Custodial</h2>
-          <p className="text-[rgb(var(--text-white))] opacity-80">You control your keys and your funds</p>
-        </div>
-      </div>
+      <div className="flex-1"></div>
 
 
 
       {/* Call-to-action buttons */}
-      <div className="space-y-4 w-full max-w-md mt-20">
+      <div className="space-y-4 w-full max-w-md">
         <PrimaryButton
           onClick={onCreateNewWallet}
           className="w-full py-4 text-lg"
