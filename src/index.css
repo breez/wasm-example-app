@@ -86,6 +86,7 @@ body,
 
 main {
   flex: 1;
+  background-color: var(--card-bg);
 }
 
 /* Transition effects */

@@ -8,11 +8,7 @@ interface TransactionListProps {
 
 const TransactionList: React.FC<TransactionListProps> = ({ transactions, onPaymentSelected }) => {
   if (!transactions.length) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6">
-        {/* No transaction placeholder content */}
-      </div>
-    );
+    return null;
   }
 
   // Format relative time (time ago)
