@@ -6,7 +6,8 @@ import {
   DialogHeader, FormGroup, FormLabel,
   FormTextarea, FormError, PrimaryButton, PaymentInfoCard,
   PaymentInfoRow, PaymentInfoDivider, ResultIcon, ResultMessage, StepContainer, StepContent,
-  BottomSheetContainer, BottomSheetCard
+  BottomSheetContainer, BottomSheetCard,
+  FormDescription
 } from './ui';
 
 // Types
@@ -55,12 +56,12 @@ const InputStep: React.FC<InputStepProps> = ({
   return (
     <FormGroup>
       <FormLabel htmlFor="payment-input">
-        Enter Lightning Invoice or Bitcoin Address
+        Pasted payee information
       </FormLabel>
       <FormTextarea
         value={paymentInput}
         onChange={(e) => setPaymentInput(e.target.value)}
-        placeholder="Enter Lightning invoice (bolt11) or Bitcoin address"
+        placeholder="Invoice"
         disabled={isLoading}
         className="h-24"
       />
@@ -90,7 +91,14 @@ const ConfirmStep: React.FC<ConfirmStepProps> = ({
 }) => {
   return (
     <FormGroup>
-
+      <center className="m-6">
+        <FormDescription>
+          You are requeted to pay
+        </FormDescription>
+        <div className="mt-2 text-2xl font-bold text-[rgb(var(--text-white))]">
+          {((amountSats || 0) + (feesSat || 0)).toLocaleString()} sats
+        </div>
+      </center>
       <PaymentInfoCard>
         <PaymentInfoRow
           label="Amount"
@@ -101,11 +109,6 @@ const ConfirmStep: React.FC<ConfirmStepProps> = ({
           value={`${feesSat?.toLocaleString() || '0'} sats`}
         />
         <PaymentInfoDivider />
-        <PaymentInfoRow
-          label="Total"
-          value={`${((amountSats || 0) + (feesSat || 0)).toLocaleString()} sats`}
-          isBold={true}
-        />
       </PaymentInfoCard>
 
       <FormError error={error} />

@@ -99,7 +99,7 @@ const GeneratePage: React.FC<GeneratePageProps> = ({
           </button>
         </div>
 
-        <div className="bg-yellow-800 bg-opacity-20 border border-yellow-600 text-yellow-200 p-4 rounded-md">
+        <div className="text-center bg-yellow-800 bg-opacity-20 border border-yellow-600 text-yellow-200 p-4 rounded-md">
           <h3 className="font-bold mb-2">⚠️ Important Warning</h3>
           <ul className="list-disc pl-5 space-y-1">
             <li>Never share your recovery phrase with anyone.</li>

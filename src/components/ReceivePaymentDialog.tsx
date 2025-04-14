@@ -3,7 +3,7 @@ import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {
   DialogHeader, FormGroup, FormLabel,
-  FormInput, FormError, FormHint, FormDescription, PrimaryButton,
+  FormInput, FormError, FormDescription, PrimaryButton,
   QRCodeContainer, CopyableText, Alert, StepContainer, BottomSheetCard, BottomSheetContainer
 } from './ui';
 
@@ -61,7 +61,7 @@ const InputForm: React.FC<InputFormProps> = ({
 
       <FormGroup className="pt-2">
         <div>
-          <FormLabel htmlFor="amount">Amount (sats)</FormLabel>
+          <FormLabel htmlFor="amount">{`Enter at least ${formatSats(minAmount)} sats`}</FormLabel>
           <FormInput
             id="amount"
             type="number"
@@ -69,22 +69,18 @@ const InputForm: React.FC<InputFormProps> = ({
             max={maxAmount}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder={`${formatSats(minAmount)} - ${formatSats(maxAmount)} sats`}
+            placeholder="Amount in sats"
             disabled={isLoading}
           />
-          <FormHint>
-            Min: {formatSats(minAmount)} sats, Max: {formatSats(maxAmount)} sats
-          </FormHint>
         </div>
 
         <div>
-          <FormLabel htmlFor="description">Description (optional)</FormLabel>
           <FormInput
             id="description"
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter a description for this invoice"
+            placeholder="Description (optional)"
             disabled={isLoading}
           />
         </div>
@@ -220,7 +216,7 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
   return (
     <BottomSheetContainer isOpen={isOpen} onClose={onClose} >
       <BottomSheetCard className="bottom-sheet-card">
-        <DialogHeader title="Receive Payment" onClose={onClose} />
+        <DialogHeader title="Lightning" onClose={onClose} />
 
         <StepContainer>
           {currentStep === 'loading_limits' && (

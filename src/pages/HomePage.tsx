@@ -22,7 +22,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
 
 
       {/* Call-to-action buttons */}
-      <div className="space-y-4 flex-col flex flex-1 w-full max-w-md justify-center">
+      <div className="space-y-4 flex-col flex w-full max-w-md justify-center mt-20">
         <PrimaryButton
           onClick={onCreateNewWallet}
           className="w-full py-4 text-lg"
@@ -45,7 +45,7 @@ const HomePage: React.FC<HomePageProps> = ({ onRestoreWallet, onCreateNewWallet 
           onClick={onRestoreWallet}
           className="w-full py-4 border border-[rgb(var(--text-white))] text-[rgb(var(--text-white))] rounded-lg hover:bg-[rgb(var(--card-border))] transition-colors text-lg"
         >
-          Restore EXISTING WALLET
+          RESTORE EXISTING WALLET
         </button>
         <div></div>
       </div>
