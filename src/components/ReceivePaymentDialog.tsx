@@ -3,7 +3,7 @@ import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {
   DialogHeader, FormGroup, FormLabel,
-  FormInput, FormError, FormDescription, PrimaryButton,
+  FormInput, FormError, PrimaryButton,
   QRCodeContainer, CopyableText, Alert, StepContainer, BottomSheetCard, BottomSheetContainer
 } from './ui';
 
