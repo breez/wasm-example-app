@@ -279,7 +279,7 @@ export const QRCodeContainer: React.FC<{
   value: string;
   size?: number;
   className?: string;
-}> = ({ value, size = 200, className = "" }) => (
+}> = ({ value, size = 250, className = "" }) => (
   <div className={`p-4 bg-white rounded-lg ${className}`}>
     <QRCode value={value} size={size} />
   </div>

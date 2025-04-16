@@ -53,11 +53,7 @@ const InputForm: React.FC<InputFormProps> = ({
 
   return (
     <FormGroup>
-      <div className="space-y-2">
-        <FormDescription>
-          Fill in the details to generate a Lightning invoice
-        </FormDescription>
-      </div>
+
 
       <FormGroup className="pt-2">
         <div>
@@ -95,7 +91,7 @@ const InputForm: React.FC<InputFormProps> = ({
         >
           {isLoading ? (
             <LoadingSpinner text="Processing..." size="small" />
-          ) : 'Generate Invoice'}
+          ) : 'Create'}
         </PrimaryButton>
       </div>
     </FormGroup>
@@ -105,7 +101,7 @@ const InputForm: React.FC<InputFormProps> = ({
 // Component to display QR code with invoice
 const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ invoice, feeSats }) => {
   return (
-    <div className="space-y-6 flex flex-col items-center">
+    <div className="pt-8 space-y-6 flex flex-col items-center">
 
       <QRCodeContainer value={invoice} />
 
@@ -216,12 +212,12 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
   return (
     <BottomSheetContainer isOpen={isOpen} onClose={onClose} >
       <BottomSheetCard className="bottom-sheet-card">
-        <DialogHeader title="Lightning" onClose={onClose} />
+        <DialogHeader title="Receive Payment" onClose={onClose} />
 
         <StepContainer>
           {currentStep === 'loading_limits' && (
             <div className="flex flex-col items-center justify-center h-40">
-              <LoadingSpinner text="Loading payment limits..." />
+              <LoadingSpinner />
             </div>
           )}
 

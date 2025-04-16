@@ -56,7 +56,7 @@ const InputStep: React.FC<InputStepProps> = ({
   return (
     <FormGroup>
       <FormLabel htmlFor="payment-input">
-        Pasted payee information
+        Payee information
       </FormLabel>
       <FormTextarea
         value={paymentInput}
