@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Payment } from '../../pkg/breez_sdk_liquid_wasm';
+import { Payment } from '@breeztech/breez-sdk-liquid/web';
 import {
   DialogHeader, PaymentInfoCard, PaymentInfoRow,
   CollapsibleCodeField, BottomSheetContainer, BottomSheetCard

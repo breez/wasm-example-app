@@ -30,6 +30,6 @@ export default defineConfig({
     sourcemap: true,
   },
   optimizeDeps: {
-    exclude: ['@breez/breez-sdk-liquid-wasm'],
+    exclude: ['@breeztech/breez-sdk-liquid/web'],
   }
 });

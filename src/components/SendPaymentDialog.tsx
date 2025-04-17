@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as breezSdk from '../../pkg/breez_sdk_liquid_wasm';
+import * as breezSdk from '@breeztech/breez-sdk-liquid/web';
 import * as walletService from '../services/walletService';
 import LoadingSpinner from './LoadingSpinner';
 import {

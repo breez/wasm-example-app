@@ -1,4 +1,4 @@
-import * as breezSdk from '../../pkg/breez_sdk_liquid_wasm';
+import * as breezSdk from '@breeztech/breez-sdk-liquid/web';
 
 // Private SDK instance - not exposed outside this module
 let sdk: breezSdk.BindingLiquidSdk | null = null;

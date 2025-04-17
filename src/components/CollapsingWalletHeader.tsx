@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetInfoResponse } from '../../pkg/breez_sdk_liquid_wasm';
+import { GetInfoResponse } from '@breeztech/breez-sdk-liquid/web';
 
 interface CollapsingWalletHeaderProps {
   walletInfo: GetInfoResponse | null;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { GetInfoResponse, Payment, SdkEvent } from '../pkg/breez_sdk_liquid_wasm';
+import { GetInfoResponse, Payment, SdkEvent } from '@breeztech/breez-sdk-liquid/web';
 import * as walletService from './services/walletService';
 import LoadingSpinner from './components/LoadingSpinner';
 import { ToastProvider, useToast } from './contexts/ToastContext';
@@ -120,7 +120,7 @@ const AppContent: React.FC = () => {
   const fetchUsdRate = useCallback(async () => {
     try {
       const rates = await walletService.fetchFiatRates();
-
+      console.log('Fetched fiat rates:', rates);
       // Find USD rate
       const usdRate = rates.find(rate => rate.coin === 'USD');
       if (usdRate) {

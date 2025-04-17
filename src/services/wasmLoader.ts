@@ -1,4 +1,4 @@
-import init from '../../pkg/breez_sdk_liquid_wasm';
+import init from '@breeztech/breez-sdk-liquid/web';
 
 // Flag to ensure we only initialize once
 let initialized = false;

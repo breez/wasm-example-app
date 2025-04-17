@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { GetInfoResponse, Payment } from '../../pkg/breez_sdk_liquid_wasm';
+import { GetInfoResponse, Payment } from '@breeztech/breez-sdk-liquid/web';
 import * as walletService from '../services/walletService';
 import CollapsingWalletHeader from '../components/CollapsingWalletHeader';
 import TransactionList from '../components/TransactionList';
