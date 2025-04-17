@@ -710,8 +710,7 @@ export interface InitOutput {
   readonly closure81_externref_shim: (a: number, b: number, c: any) => void;
   readonly closure86_externref_shim_multivalue_shim: (a: number, b: number, c: any) => [number, number];
   readonly _dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hc5a41db1dabe9b5a: (a: number, b: number) => void;
-  readonly _dyn_core__ops__function__Fn_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h65b85e8787f1cd5e: (a: number, b: number) => void;
-  readonly closure849_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly closure856_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 
