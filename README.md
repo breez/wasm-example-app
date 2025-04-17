@@ -1,18 +1,16 @@
-# Breez Lightning Wallet (Web Demo)
+# WASM Demo App
 
-A demonstration web application showing how to implement a Lightning Network wallet using the Breez SDK with WebAssembly.
+A demonstration web app showing how to implement Bitcoin payments via the Lightning Network using the [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) with WebAssembly.
 
 ## Overview
 
-This project demonstrates building a web-based Lightning wallet that enables users to:
+Built with React, this demo app showcases best practices for integrating Lightning in a web environment using the Breez SDK’s WebAssembly bindings. It enables users to:
 
 - Connect with a mnemonic seed phrase
-- Send Lightning payments using bolt11 invoices
+- Send Lightning payments using Bolt11 invoices
 - Receive Lightning payments by generating invoices
 - View transaction history
 - View detailed payment information
-
-The application showcases best practices for implementing a Lightning wallet in a web environment using React and the Breez SDK WebAssembly bindings.
 
 ## Technologies Used
 
@@ -22,7 +20,7 @@ The application showcases best practices for implementing a Lightning wallet in 
 
 ## Prerequisites
 
-- A Breez API key ([Get one here](https://breez.technology))
+You'll need a **Nodeless** Breez API key for the SDK to work — you can request one for free [here](https://breez.technology/request-api-key/#contact-us-form-sdk).
 
 ## Getting Started
 
