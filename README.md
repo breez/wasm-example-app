@@ -1,6 +1,6 @@
 # WASM Demo App
 
-A demonstration web app showing how to implement Bitcoin payments via the Lightning Network using the [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) with WebAssembly.
+A demonstration web app showing how to implement Bitcoin payments via Lightning using the [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) with WebAssembly.
 
 ## Overview
 
@@ -16,7 +16,7 @@ Built with React, this demo app showcases best practices for integrating Lightni
 
 - React with TypeScript
 - Tailwind CSS for styling
-- Breez SDK (WASM version) for Lightning Network functionality
+- [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) for Lightning payments
 
 ## Prerequisites
 
@@ -86,5 +86,5 @@ The build output will be in the `dist` directory.
 
 ## Security Notes
 
-- The application stores your mnemonic in localStorage, which is not suitable for production use
-- For a production application, use secure storage and encryption for sensitive data
+- The app stores your mnemonic in localStorage, which is not suitable for production use
+- For a production app, use secure storage and encryption for sensitive data
