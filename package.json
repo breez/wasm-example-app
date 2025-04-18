@@ -1,5 +1,5 @@
 {
-  "name": "breez-wasm-wallet",
+  "name": "wasm-example-app",
   "private": true,
   "version": "0.1.0",
   "type": "module",
