@@ -27,8 +27,8 @@ You'll need a **Nodeless** Breez API key for the SDK to work — you can request
 ### Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/breez-wasm-wallet.git
-cd breez-wasm-wallet
+git clone https://github.com:breez/wasm-example-app.git
+cd wasm-example-app
 ```
 
 ### Install dependencies
