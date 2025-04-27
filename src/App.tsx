@@ -234,6 +234,37 @@ const AppContent: React.FC = () => {
     }
   };
 
+  // Handle logout
+  const handleLogout = useCallback(async () => {
+    try {
+      setIsLoading(true);
+
+      // Disconnect from Breez SDK
+      if (isConnected) {
+        await walletService.disconnect();
+      }
+
+      // Clear the stored mnemonic
+      walletService.clearMnemonic();
+
+      // Reset state
+      setIsConnected(false);
+      setWalletInfo(null);
+      setTransactions([]);
+
+      // Navigate back to home screen
+      setCurrentScreen('home');
+
+      // Show logout success toast
+      showToast('success', 'Successfully logged out');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      setError('Failed to log out properly. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isConnected, showToast]);
+
   // Navigation handlers
   const navigateToRestore = () => setCurrentScreen('restore');
   const navigateToGenerate = () => setCurrentScreen('generate');
@@ -288,6 +319,7 @@ const AppContent: React.FC = () => {
             isRestoring={isRestoring}
             error={error}
             onClearError={clearError}
+            onLogout={handleLogout}
           />
         );
 

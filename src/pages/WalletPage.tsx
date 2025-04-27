@@ -16,6 +16,7 @@ interface WalletPageProps {
   isRestoring: boolean;
   error: string | null;
   onClearError: () => void;
+  onLogout: () => void;
 }
 
 const WalletPage: React.FC<WalletPageProps> = ({
@@ -24,6 +25,7 @@ const WalletPage: React.FC<WalletPageProps> = ({
   usdRate,
   refreshWalletData,
   isRestoring,
+  onLogout
 }) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
@@ -68,7 +70,7 @@ const WalletPage: React.FC<WalletPageProps> = ({
   }, [refreshWalletData]);
 
   return (
-    //<PageLayout showHeader={false} onClearError={onClearError}>
+
     <div className="flex flex-col h-[calc(100dvh)] relative bg-[var(--card-bg)]">
       {/* Show restoration overlay if we're restoring */}
       {isRestoring && (
@@ -83,6 +85,7 @@ const WalletPage: React.FC<WalletPageProps> = ({
           walletInfo={walletInfo}
           usdRate={usdRate}
           scrollProgress={scrollProgress}
+          onLogout={onLogout}
         />
       </div>
 
@@ -137,7 +140,6 @@ const WalletPage: React.FC<WalletPageProps> = ({
         </button>
       </div>
     </div>
-    // </PageLayout>
   );
 };
 
