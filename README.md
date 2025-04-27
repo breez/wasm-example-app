@@ -1,6 +1,10 @@
 # WASM Demo App
 
-A demonstration web app showing how to implement Bitcoin payments via Lightning using the [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) with WebAssembly.
+A demonstration web app showing how to implement Bitcoin payments via Lightning using the [Breez SDK - Nodeless](https://sdk-doc-liquid.breez.technology/) with WebAssembly. 
+
+See it in action [here](https://wasm-example-app.vercel.app/). 
+
+Note: this is just a demo, for production usage, check out the security notes below.
 
 ## Overview
 
