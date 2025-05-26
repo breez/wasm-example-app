@@ -8,7 +8,6 @@ export const initWallet = async (mnemonic: string): Promise<void> => {
     const config = breezSdk.defaultConfig('mainnet');
     // Configure working directory and cache dir
     config.workingDir = './breez_data';
-    config.cacheDir = './breez_cache';
 
     // Get the API key from environment variables
     const breezApiKey = import.meta.env.VITE_BREEZ_API_KEY;
