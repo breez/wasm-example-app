@@ -90,5 +90,4 @@ The build output will be in the `dist` directory.
 
 ## Security Notes
 
-- The app stores your mnemonic in localStorage, which is not suitable for production use
-- For a production app, use secure storage and encryption for sensitive data
+- The app stores your mnemonic in localStorage. For a production app, it's recommended to use a secured storage and encrypt sensitive data.
