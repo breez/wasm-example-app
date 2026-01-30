@@ -1,19 +1,24 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { GetInfoResponse, Payment, SdkEvent } from '@breeztech/breez-sdk-liquid/web';
 import * as walletService from './services/walletService';
+import { deriveKleverMnemonic } from './services/bip85';
 import LoadingSpinner from './components/LoadingSpinner';
 import { ToastProvider, useToast } from './contexts/ToastContext';
+import { PartnerProvider, usePartner, storePartner, clearStoredPartner } from './contexts/PartnerContext';
 
 // Import our page components
 import HomePage from './pages/HomePage';
 import RestorePage from './pages/RestorePage';
 import GeneratePage from './pages/GeneratePage';
 import WalletPage from './pages/WalletPage';
+import DiagnosticsPage from './pages/DiagnosticsPage';
 
 // Main App without toast functionality
 const AppContent: React.FC = () => {
   // Screen navigation state
-  const [currentScreen, setCurrentScreen] = useState<'home' | 'restore' | 'generate' | 'wallet'>('home');
+  const [currentScreen, setCurrentScreen] = useState<'home' | 'restore' | 'generate' | 'wallet' | 'diagnostics' | 'rescanSwaps'>('home');
+
+  const { isKleverMode, partner, partnerMismatch } = usePartner();
 
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -148,9 +153,19 @@ const AppContent: React.FC = () => {
   // Try to connect with saved mnemonic on app startup
   useEffect(() => {
     const checkForExistingWallet = async () => {
-      const savedMnemonic = walletService.getSavedMnemonic();
+      const savedMnemonic = walletService.getMnemonic();
 
       if (savedMnemonic) {
+        // If partner context changed, clear stored wallet and start fresh
+        if (partnerMismatch) {
+          console.log('Partner mismatch detected, clearing stored wallet...');
+          walletService.clearMnemonic();
+          clearStoredPartner();
+          setCurrentScreen('home');
+          setIsLoading(false);
+          return;
+        }
+
         try {
           setIsLoading(true);
           await connectWallet(savedMnemonic, false);
@@ -206,14 +221,22 @@ const AppContent: React.FC = () => {
   const connectWallet = async (mnemonic: string, restore: boolean) => {
     try {
       setIsLoading(true);
-      setIsRestoring(restore); // Mark that we're restoring data      
+      setIsRestoring(restore); // Mark that we're restoring data
       setError(null);
 
-      // Initialize wallet with mnemonic
-      await walletService.initWallet(mnemonic);
+      let seed: number[] | undefined;
+      if (isKleverMode) {
+        // In Klever mode, derive mnemonic via BIP-85 and pass its string bytes as seed
+        const derived = deriveKleverMnemonic(mnemonic, 0);
+        seed = derived.mnemonicBytes;
+      }
 
-      // Save mnemonic for future use
-      walletService.saveMnemonic(mnemonic);
+      // Initialize wallet: use the seed when set, else use the mnemonic
+      await walletService.initWallet(mnemonic, seed);
+
+      // Save the original mnemonic (so re-derivation works on reload)
+      walletService.setMnemonic(mnemonic);
+      storePartner(partner);
 
       // Get wallet info and transactions
       const info = await walletService.getWalletInfo();
@@ -244,8 +267,9 @@ const AppContent: React.FC = () => {
         await walletService.disconnect();
       }
 
-      // Clear the stored mnemonic
+      // Clear the stored mnemonic and partner
       walletService.clearMnemonic();
+      clearStoredPartner();
 
       // Reset state
       setIsConnected(false);
@@ -269,6 +293,8 @@ const AppContent: React.FC = () => {
   const navigateToRestore = () => setCurrentScreen('restore');
   const navigateToGenerate = () => setCurrentScreen('generate');
   const navigateToHome = () => setCurrentScreen('home');
+  const navigateToDiagnostics = () => setCurrentScreen('diagnostics');
+  const navigateToWallet = () => setCurrentScreen('wallet');
   const clearError = () => setError(null);
 
   // Determine which screen to render
@@ -320,6 +346,14 @@ const AppContent: React.FC = () => {
             error={error}
             onClearError={clearError}
             onLogout={handleLogout}
+            onOpenDiagnostics={navigateToDiagnostics}
+          />
+        );
+
+      case 'diagnostics':
+        return (
+          <DiagnosticsPage
+            onBack={navigateToWallet}
           />
         );
 
@@ -334,13 +368,15 @@ const AppContent: React.FC = () => {
 // Wrap the App with ToastProvider
 function App() {
   return (
-    <ToastProvider>
-      <div className="flex-grow flex main-wrapper">
-        <div className="flex-grow max-w-4xl mx-auto">
-          <AppContent />
+    <PartnerProvider>
+      <ToastProvider>
+        <div className="flex-grow flex main-wrapper">
+          <div id="content-root" className="flex-grow max-w-4xl mx-auto relative">
+            <AppContent />
+          </div>
         </div>
-      </div>
-    </ToastProvider>
+      </ToastProvider>
+    </PartnerProvider>
   );
 }
 

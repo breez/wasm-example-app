@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { GetInfoResponse, Payment } from '@breeztech/breez-sdk-liquid/web';
 import * as walletService from '../services/walletService';
 import CollapsingWalletHeader from '../components/CollapsingWalletHeader';
+import SideMenu from '../components/SideMenu';
 import TransactionList from '../components/TransactionList';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SendPaymentDialog from '../components/SendPaymentDialog';
@@ -17,6 +18,7 @@ interface WalletPageProps {
   error: string | null;
   onClearError: () => void;
   onLogout: () => void;
+  onOpenDiagnostics: () => void;
 }
 
 const WalletPage: React.FC<WalletPageProps> = ({
@@ -25,12 +27,14 @@ const WalletPage: React.FC<WalletPageProps> = ({
   usdRate,
   refreshWalletData,
   isRestoring,
-  onLogout
+  onLogout,
+  onOpenDiagnostics
 }) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [isSendDialogOpen, setIsSendDialogOpen] = useState<boolean>(false);
   const [isReceiveDialogOpen, setIsReceiveDialogOpen] = useState<boolean>(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const transactionsContainerRef = useRef<HTMLDivElement>(null);
   const collapseThreshold = 100; // pixels of scroll before header is fully collapsed
@@ -79,13 +83,21 @@ const WalletPage: React.FC<WalletPageProps> = ({
         </div>
       )}
 
+      {/* Side Menu */}
+      <SideMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onOpenDiagnostics={onOpenDiagnostics}
+        onLogout={onLogout}
+      />
+
       {/* Fixed position header that collapses on scroll */}
       <div className="sticky top-0 z-10 bg-[rgb(var(--background-rgb))]">
         <CollapsingWalletHeader
           walletInfo={walletInfo}
           usdRate={usdRate}
           scrollProgress={scrollProgress}
-          onLogout={onLogout}
+          onMenuOpen={() => setIsMenuOpen(true)}
         />
       </div>
 

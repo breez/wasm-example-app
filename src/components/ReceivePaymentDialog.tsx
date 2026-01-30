@@ -186,7 +186,7 @@ const ReceivePaymentDialog: React.FC<ReceivePaymentDialogProps> = ({ isOpen, onC
     try {
       // Generate lightning invoice using walletService
       const prepareResponse = await walletService.prepareReceivePayment({
-        paymentMethod: 'lightning',
+        paymentMethod: 'bolt11Invoice',
         amount: {
           type: 'bitcoin',
           payerAmountSat: amountSats,
