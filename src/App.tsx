@@ -231,7 +231,7 @@ const AppContent: React.FC = () => {
         seed = derived.mnemonicBytes;
       }
 
-      // Initialize wallet: usse the seed when set, else use the mnemonic
+      // Initialize wallet: use the seed when set, else use the mnemonic
       await walletService.initWallet(mnemonic, seed);
 
       // Save the original mnemonic (so re-derivation works on reload)
