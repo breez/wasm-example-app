@@ -3,7 +3,7 @@ import PageLayout from '../components/layout/PageLayout';
 import { PrimaryButton } from '../components/ui';
 
 interface RestorePageProps {
-  onConnect: (mnemonic: string) => void;
+  onConnect: (mnemonic: string, derivationPath?: string) => void;
   onBack: () => void;
   onClearError: () => void;
 }

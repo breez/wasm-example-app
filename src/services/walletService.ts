@@ -3,8 +3,40 @@ import * as breezSdk from '@breeztech/breez-sdk-liquid/web';
 // Private SDK instance - not exposed outside this module
 let sdk: breezSdk.BindingLiquidSdk | null = null;
 
-export const initWallet = async (mnemonic: string): Promise<void> => {
+// Log storage configuration
+const MAX_LOG_LINES = 100000;
+let sdkLogs: string[] = [];
+let logger: WebLogger | null = null;
+
+function appendLog(line: string) {
+  sdkLogs.push(line);
+  if (sdkLogs.length > MAX_LOG_LINES) {
+    sdkLogs.splice(0, sdkLogs.length - MAX_LOG_LINES);
+  }
+}
+
+class WebLogger implements breezSdk.Logger {
+  log = (logEntry: breezSdk.LogEntry) => {
+    const ts = new Date().toISOString();
+    const formatted = `${ts} [${logEntry.level}]: ${logEntry.line}`;
+    console.log(formatted);
+    appendLog(formatted);
+  }
+}
+
+// Export function to retrieve logs
+export function getSdkLogs(): string {
+  return sdkLogs.join('\n');
+}
+
+export const initWallet = async (mnemonic: string, seed?: number[]): Promise<void> => {
   try {
+    // Initialize logger if not already done
+    if (!logger) {
+      logger = new WebLogger();
+      breezSdk.setLogger(logger);
+    }
+
     const config = breezSdk.defaultConfig('mainnet');
     // Configure working directory and cache dir
     config.workingDir = './breez_data';
@@ -18,10 +50,11 @@ export const initWallet = async (mnemonic: string): Promise<void> => {
 
     config.breezApiKey = breezApiKey;
 
-    // Connect to Breez network with user mnemonic
+    // Connect to Breez network with either seed or mnemonic
     sdk = await breezSdk.connect({
       config,
-      mnemonic,
+      mnemonic: seed ? undefined : mnemonic,
+      seed,
     });
 
     // Return void instead of the SDK instance
@@ -162,16 +195,22 @@ export const disconnect = async (): Promise<void> => {
 };
 
 // Helper to save mnemonic to localStorage
-export const saveMnemonic = (mnemonic: string): void => {
+export const setMnemonic = (mnemonic: string): void => {
   localStorage.setItem('walletMnemonic', mnemonic);
 };
 
 // Helper to retrieve mnemonic from localStorage
-export const getSavedMnemonic = (): string | null => {
+export const getMnemonic = (): string | null => {
   return localStorage.getItem('walletMnemonic');
 };
 
 // Helper to clear mnemonic from localStorage
 export const clearMnemonic = (): void => {
   localStorage.removeItem('walletMnemonic');
+};
+
+// Rescan all expired onchain swaps to check for refundable funds
+export const rescanOnchainSwaps = async (): Promise<void> => {
+  if (!sdk) throw new Error('SDK not initialized');
+  return await sdk.rescanOnchainSwaps();
 };
